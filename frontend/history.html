@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Parking History - Smart Car Parking</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient( circle at top left, rgba(37, 99, 235, 0.35), transparent 35%), radial-gradient( circle at bottom right, rgba(6, 182, 212, 0.25), transparent 35%), linear-gradient( 135deg, #07111f 0%, #0f172a 45%, #12344a 100%);
+            background-attachment: fixed;
+        }
+        
+        .main {
+            min-height: 100vh;
+            background: linear-gradient( 135deg, rgba(248, 250, 252, 0.97), rgba(239, 246, 255, 0.97));
+        }
+        
+        .history-container {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .history-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 22px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+            transition: 0.25s ease;
+        }
+        
+        .history-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.14);
+        }
+        
+        .history-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .booking-id {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        
+        .booking-date {
+            margin-top: 5px;
+            color: #64748b;
+            font-size: 13px;
+        }
+        
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-top: 18px;
+        }
+        
+        .history-info {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 14px;
+        }
+        
+        .history-label {
+            display: block;
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+        
+        .history-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        
+        .amount {
+            color: #15803d;
+            font-size: 17px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 7px 13px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .status-active {
+            background: #dcfce7;
+            color: #15803d;
+        }
+        
+        .status-completed {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+        
+        .status-cancelled {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .status-default {
+            background: #f1f5f9;
+            color: #475569;
+        }
+        
+        .history-empty {
+            text-align: center;
+            padding: 50px 20px;
+            color: #64748b;
+        }
+        
+        .history-empty-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        
+        .history-loading {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+        
+        .history-error {
+            background: #fee2e2;
+            color: #b91c1c;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        
+        .refresh-btn {
+            cursor: pointer;
+        }
+        
+        @media (max-width: 900px) {
+            .history-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .history-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .history-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="layout">
+
+
+        <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+        <aside class="sidebar">
+
+            <div class="side-brand">
+
+                <div class="side-logo">
+                    🚗
+                </div>
+
+                <span>
+                Smart Parking
+            </span>
+
+            </div>
+
+
+            <nav class="nav">
+
+                <a href="dashboard.html">
+                🏠 Dashboard
+            </a>
+
+                <a href="parking-slots.html">
+                🅿️ Parking Slots
+            </a>
+
+                <a href="vehicles.html">
+                🚘 My Vehicles
+            </a>
+
+                <a href="bookings.html">
+                📅 My Bookings
+            </a>
+
+                <a href="history.html" class="active">
+                🕘 Parking History
+            </a>
+
+                <a href="map.html">
+                🗺️ Live Map
+            </a>
+
+                <a href="products.html">
+                🛒 Products
+            </a>
+
+                <a href="cart.html">
+                🛍️ Cart
+            </a>
+
+                <a href="orders.html">
+                📦 Orders
+            </a>
+
+            </nav>
+
+
+            <div class="side-bottom">
+
+                <div class="ai-status">
+
+                    <strong>
+                    🤖 AI Parking
+                </strong>
+
+                    <p>
+                        System Online
+                    </p>
+
+                    <small>
+                    Smart slot recommendation active
+                </small>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+
+        <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+        <main class="main">
+
+
+            <!-- TOP BAR -->
+
+            <header class="topbar">
+
+                <div>
+
+                    <strong>
+                    Smart Car Parking
+                </strong>
+
+                </div>
+
+
+                <div class="top-user">
+
+                    <div>
+
+                        <strong id="userName">
+                        User
+                    </strong>
+
+                        <small id="userEmail" class="muted">
+                        user@example.com
+                    </small>
+
+                    </div>
+
+
+                    <div class="avatar" id="userAvatar">
+                        U
+                    </div>
+
+
+                    <button class="outline-btn compact" onclick="logout()">
+                    Logout
+                </button>
+
+                </div>
+
+            </header>
+
+
+
+            <!-- =================================================
+             PAGE CONTENT
+        ================================================== -->
+
+            <section class="page-content">
+
+
+                <!-- PAGE HEADER -->
+
+                <div class="page-head">
+
+                    <div>
+
+                        <h1>
+                            🕘 Parking History
+                        </h1>
+
+                        <p class="muted">
+                            View your previous parking bookings and payment details.
+                        </p>
+
+                    </div>
+
+
+                    <button class="primary-btn refresh-btn" onclick="loadHistory()">
+                    🔄 Refresh
+                </button>
+
+                </div>
+
+
+
+                <!-- ERROR -->
+
+                <div id="historyError" class="history-error"></div>
+
+
+
+                <!-- HISTORY PANEL -->
+
+                <div class="panel">
+
+                    <div class="history-container">
+
+                        <!-- LOADING -->
+
+                        <div id="historyLoading" class="history-loading">
+                            ⏳ Loading parking history...
+                        </div>
+
+
+                        <!-- EMPTY -->
+
+                        <div id="historyEmpty" class="history-empty" style="display:none;">
+
+                            <div class="history-empty-icon">
+                                🅿️
+                            </div>
+
+                            <h3>
+                                No Parking History
+                            </h3>
+
+                            <p>
+                                Your previous parking bookings will appear here.
+                            </p>
+
+                            <a href="parking-slots.html" class="primary-btn">
+                            Find Parking Slot
+                        </a>
+
+                        </div>
+
+
+                        <!-- HISTORY LIST -->
+
+                        <div id="historyList"></div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PAGE MESSAGE -->
+
+                <div id="historyMessage" class="message"></div>
+
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+
+    <!-- =========================================================
+     JAVASCRIPT
+========================================================== -->
+
+    <script src="js/config.js"></script>
+
+    <script src="js/auth.js"></script>
+
+    <script src="js/history.js"></script>
+
+
+</body>
+
+</html>

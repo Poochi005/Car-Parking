@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Orders - Smart Car Parking</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+        
+        .admin-page {
+            min-height: 100vh;
+        }
+        
+        .admin-header {
+            background: #111827;
+            color: white;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .admin-brand h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        
+        .admin-brand p {
+            margin: 5px 0 0;
+            color: #cbd5e1;
+            font-size: 13px;
+        }
+        
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .admin-btn {
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .dashboard-btn {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .logout-btn {
+            background: #dc2626;
+            color: white;
+        }
+        
+        .admin-container {
+            max-width: 1400px;
+            margin: auto;
+            padding: 30px;
+        }
+        
+        .page-title {
+            margin-bottom: 25px;
+        }
+        
+        .page-title h2 {
+            margin: 0;
+            font-size: 30px;
+        }
+        
+        .page-title p {
+            margin: 8px 0 0;
+            color: #6b7280;
+        }
+        /* STATS */
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
+        }
+        
+        .stat-card h3 {
+            margin: 0;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .stat-card .stat-value {
+            margin-top: 10px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        /* FILTER */
+        
+        .filter-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
+        }
+        
+        .filter-row {
+            display: grid;
+            grid-template-columns: 220px 1fr auto;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .filter-row select,
+        .filter-row input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .refresh-btn {
+            background: #059669;
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        /* ORDERS */
+        
+        .orders-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
+        }
+        
+        .orders-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .orders-panel-header h3 {
+            margin: 0;
+        }
+        
+        #ordersLoading {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+        
+        #ordersError {
+            display: none;
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        #ordersEmpty {
+            display: none;
+            text-align: center;
+            padding: 50px 20px;
+            color: #6b7280;
+        }
+        
+        .orders-list {
+            display: grid;
+            gap: 18px;
+        }
+        
+        .order-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            transition: 0.2s;
+        }
+        
+        .order-card:hover {
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+        }
+        
+        .order-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+        
+        .order-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #111827;
+        }
+        
+        .order-date {
+            color: #6b7280;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+        
+        .status-badge {
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        
+        .status-PLACED {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+        
+        .status-CONFIRMED {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-PREPARING {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-OUT_FOR_DELIVERY {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+        
+        .status-DELIVERED {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-CANCELLED {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .order-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+        
+        .info-box {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 14px;
+        }
+        
+        .info-label {
+            display: block;
+            color: #6b7280;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-weight: 600;
+            font-size: 14px;
+            word-break: break-word;
+        }
+        
+        .order-total {
+            color: #047857;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .payment-success {
+            color: #047857;
+            font-weight: bold;
+        }
+        
+        .payment-pending {
+            color: #b45309;
+            font-weight: bold;
+        }
+        
+        .payment-failed {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        
+        .delivery-box {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 18px;
+        }
+        
+        .order-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .order-controls label {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .order-controls select {
+            padding: 9px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+        }
+        
+        .update-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            padding: 9px 14px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .update-btn:hover {
+            background: #1d4ed8;
+        }
+        
+        .update-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .order-message {
+            width: 100%;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+        
+        .success-message {
+            color: #047857;
+        }
+        
+        .error-message {
+            color: #dc2626;
+        }
+        
+        @media (max-width: 1000px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .order-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 650px) {
+            .admin-header {
+                padding: 15px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .admin-container {
+                padding: 15px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .order-grid {
+                grid-template-columns: 1fr;
+            }
+            .order-top {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="admin-page">
+
+        <!-- HEADER -->
+
+        <header class="admin-header">
+
+            <div class="admin-brand">
+                <h1>🚗 Smart Car Parking</h1>
+                <p>Admin Order Management</p>
+            </div>
+
+            <div class="admin-actions">
+                <a href="admin-dashboard.html" class="admin-btn dashboard-btn">
+                Dashboard
+            </a>
+
+                <button class="admin-btn logout-btn" onclick="logoutAdmin()">
+                Logout
+            </button>
+            </div>
+
+        </header>
+
+
+        <!-- MAIN -->
+
+        <main class="admin-container">
+
+            <div class="page-title">
+                <h2>📦 Manage Orders</h2>
+                <p>View and update customer orders.</p>
+            </div>
+
+
+            <!-- STATS -->
+
+            <section class="stats-grid">
+
+                <div class="stat-card">
+                    <h3>Total Orders</h3>
+                    <div class="stat-value" id="totalOrders">
+                        0
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Active Orders</h3>
+                    <div class="stat-value" id="activeOrders">
+                        0
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Delivered Orders</h3>
+                    <div class="stat-value" id="deliveredOrders">
+                        0
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Total Revenue</h3>
+                    <div class="stat-value" id="totalRevenue">
+                        ₹0.00
+                    </div>
+                </div>
+
+            </section>
+
+
+            <!-- FILTER -->
+
+            <section class="filter-panel">
+
+                <div class="filter-row">
+
+                    <select id="orderStatusFilter">
+                    <option value="ALL">All Orders</option>
+                    <option value="PLACED">Placed</option>
+                    <option value="CONFIRMED">Confirmed</option>
+                    <option value="PREPARING">Preparing</option>
+                    <option value="OUT_FOR_DELIVERY">
+                        Out for Delivery
+                    </option>
+                    <option value="DELIVERED">Delivered</option>
+                    <option value="CANCELLED">Cancelled</option>
+                </select>
+
+                    <input type="text" id="orderSearch" placeholder="Search order number, customer, email...">
+
+                    <button class="refresh-btn" onclick="loadAdminOrders()">
+                    🔄 Refresh
+                </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- ORDERS -->
+
+            <section class="orders-panel">
+
+                <div class="orders-panel-header">
+
+                    <h3>
+                        Customer Orders
+                    </h3>
+
+                    <span id="ordersCount">
+                    0 orders
+                </span>
+
+                </div>
+
+
+                <div id="ordersError"></div>
+
+
+                <div id="ordersLoading">
+                    Loading orders...
+                </div>
+
+
+                <div id="ordersEmpty">
+                    <h3>No Orders Found</h3>
+                    <p>
+                        There are no orders matching your search/filter.
+                    </p>
+                </div>
+
+
+                <div id="ordersList" class="orders-list"></div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- SCRIPTS -->
+
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/admin-orders.js"></script>
+
+</body>
+
+</html>

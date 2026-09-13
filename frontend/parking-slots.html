@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Parking Slots - Smart Car Parking</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <h1>🚗 Smart Car Parking</h1>
+
+        <nav>
+            <a href="index.html">Dashboard</a>
+            <a href="parking-slots.html">Parking Slots</a>
+            <a href="vehicles.html">Vehicles</a>
+            <a href="bookings.html">Bookings</a>
+        </nav>
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+        <h2>🅿️ Parking Slots</h2>
+
+        <p>
+            Select an available parking slot to continue booking.
+        </p>
+
+
+        <!-- LOADING -->
+        <div id="loading">
+            Loading parking slots...
+        </div>
+
+
+        <!-- SLOT CONTAINER -->
+        <div id="slotContainer" class="slot-container"></div>
+
+
+        <!-- BOOKING SECTION -->
+        <div id="bookingSection" style="display: none;">
+
+            <h2>🚗 Book Parking Slot</h2>
+
+            <div id="selectedSlotInfo"></div>
+
+
+            <form id="bookingForm">
+
+                <div>
+                    <label for="vehicleSelect">
+                        Select Vehicle
+                    </label>
+
+                    <select id="vehicleSelect" required>
+                        <option value="">
+                            Select your vehicle
+                        </option>
+                    </select>
+                </div>
+
+
+                <div>
+                    <label for="bookingDate">
+                        Booking Date
+                    </label>
+
+                    <input type="date" id="bookingDate" required>
+                </div>
+
+
+                <div>
+                    <label for="startTime">
+                        Start Time
+                    </label>
+
+                    <input type="time" id="startTime" required>
+                </div>
+
+
+                <div>
+                    <label for="endTime">
+                        End Time
+                    </label>
+
+                    <input type="time" id="endTime" required>
+                </div>
+
+
+                <button type="submit">
+                    🚗 Confirm Booking
+                </button>
+
+                <button type="button" id="cancelBooking">
+                    Cancel
+                </button>
+
+            </form>
+
+
+            <!-- BOOKING MESSAGE -->
+            <div id="bookingMessage"></div>
+
+        </div>
+
+    </main>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="js/config.js"></script>
+    <script src="js/parking-slots.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Login - Smart Car Parking</title>
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+         ADMIN LOGIN PAGE
+         ========================================================= -->
+
+    <div class="center-page">
+
+        <div class="auth-box admin-login-card">
+
+
+            <!-- =================================================
+                 ADMIN LOGO
+                 ================================================= -->
+
+            <div class="brand-mark small">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+
+
+            <!-- =================================================
+                 TITLE
+                 ================================================= -->
+
+            <h2>
+                Admin Login
+            </h2>
+
+            <p class="muted">
+                Smart Car Parking Management System
+            </p>
+
+
+            <!-- =================================================
+                 LOGIN FORM
+                 ================================================= -->
+
+            <form id="adminLoginForm">
+
+
+                <!-- USERNAME -->
+
+                <label for="adminUsername">
+                    Admin Username
+                </label>
+
+                <input type="text" id="adminUsername" name="adminUsername" placeholder="Admin Username" autocomplete="username" required>
+
+
+                <!-- PASSWORD -->
+
+                <label for="adminPassword">
+                    Password
+                </label>
+
+                <div style="position: relative;">
+
+                    <input type="password" id="adminPassword" name="adminPassword" placeholder="Password" autocomplete="current-password" required style="padding-right: 45px;">
+
+                    <button type="button" id="adminPasswordEye" onclick="toggleAdminPassword()" aria-label="Show password" style="
+                            position:absolute;
+                            right:10px;
+                            top:50%;
+                            transform:translateY(-50%);
+                            border:0;
+                            background:transparent;
+                            color:#667085;
+                            font-size:16px;
+                        ">
+                        <i class="fa-regular fa-eye"></i>
+                    </button>
+
+                </div>
+
+
+                <!-- OPTIONS -->
+
+                <div class="form-line">
+
+                    <label style="
+                            display:flex;
+                            align-items:center;
+                            gap:8px;
+                            margin:0;
+                            font-weight:400;
+                        ">
+
+                        <input
+                            type="checkbox"
+                            id="adminRememberMe"
+                            style="width:auto; margin:0;"
+                        >
+
+                        Remember Me
+
+                    </label>
+
+
+                    <a href="#" onclick="forgotAdminPassword(event)">
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+
+                <!-- LOGIN BUTTON -->
+
+                <button type="submit" class="primary-btn" id="adminLoginButton">
+
+                    <i class="fa-solid fa-right-to-bracket"></i>
+
+                    &nbsp;
+
+                    Login as Admin
+
+                </button>
+
+
+            </form>
+
+
+            <!-- =================================================
+                 ADMIN FEATURES
+                 ================================================= -->
+
+            <div class="admin-features" style="
+                    margin-top:25px;
+                    display:grid;
+                    grid-template-columns:repeat(3,1fr);
+                    gap:10px;
+                ">
+
+                <div style="
+                        text-align:center;
+                        padding:12px 5px;
+                        border:1px solid #e5e9f0;
+                        border-radius:8px;
+                    ">
+
+                    <i class="fa-solid fa-square-parking" style="
+                            font-size:20px;
+                            color:#2f62e9;
+                        "></i>
+
+                    <div style="
+                            font-size:11px;
+                            margin-top:5px;
+                        ">
+                        Parking
+                    </div>
+
+                </div>
+
+
+                <div style="
+                        text-align:center;
+                        padding:12px 5px;
+                        border:1px solid #e5e9f0;
+                        border-radius:8px;
+                    ">
+
+                    <i class="fa-solid fa-car" style="
+                            font-size:20px;
+                            color:#2f62e9;
+                        "></i>
+
+                    <div style="
+                            font-size:11px;
+                            margin-top:5px;
+                        ">
+                        Vehicles
+                    </div>
+
+                </div>
+
+
+                <div style="
+                        text-align:center;
+                        padding:12px 5px;
+                        border:1px solid #e5e9f0;
+                        border-radius:8px;
+                    ">
+
+                    <i class="fa-solid fa-chart-line" style="
+                            font-size:20px;
+                            color:#2f62e9;
+                        "></i>
+
+                    <div style="
+                            font-size:11px;
+                            margin-top:5px;
+                        ">
+                        Reports
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 BACK TO USER LOGIN
+                 ================================================= -->
+
+            <p class="register-text">
+
+                <a href="index.html">
+
+                    <i class="fa-solid fa-arrow-left"></i> Back to User Login
+
+                </a>
+
+            </p>
+
+
+            <!-- =================================================
+                 MESSAGE
+                 ================================================= -->
+
+            <div id="adminMessage" class="message"></div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         TOAST
+         ========================================================= -->
+
+    <div id="adminToast" class="toast" style="
+            position:fixed;
+            right:20px;
+            bottom:20px;
+            padding:15px 20px;
+            background:#172033;
+            color:#fff;
+            border-radius:8px;
+            display:none;
+            z-index:9999;
+        ">
+
+        <i class="fa-solid fa-circle-check" id="adminToastIcon"></i>
+
+        <span id="adminToastMessage">
+            Success
+        </span>
+
+    </div>
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+         IMPORTANT ORDER
+         ========================================================= -->
+
+    <script src="js/config.js"></script>
+
+    <script src="js/auth.js"></script>
+
+    <script src="js/app.js"></script>
+
+    <script src="js/admin.js"></script>
+
+
+    <!-- =========================================================
+         ADMIN LOGIN PAGE FUNCTIONS
+         ========================================================= -->
+
+    <script>
+        // =====================================================
+        // ADMIN PASSWORD TOGGLE
+        // =====================================================
+
+        function toggleAdminPassword() {
+
+            const password =
+                document.getElementById("adminPassword");
+
+            const button =
+                document.getElementById("adminPasswordEye");
+
+            if (!password || !button) {
+                return;
+            }
+
+            const icon =
+                button.querySelector("i");
+
+            if (password.type === "password") {
+
+                password.type = "text";
+
+                if (icon) {
+
+                    icon.classList.remove(
+                        "fa-eye"
+                    );
+
+                    icon.classList.add(
+                        "fa-eye-slash"
+                    );
+
+                }
+
+            } else {
+
+                password.type = "password";
+
+                if (icon) {
+
+                    icon.classList.remove(
+                        "fa-eye-slash"
+                    );
+
+                    icon.classList.add(
+                        "fa-eye"
+                    );
+
+                }
+
+            }
+
+        }
+
+
+        // =====================================================
+        // FORGOT PASSWORD
+        // =====================================================
+
+        function forgotAdminPassword(event) {
+
+            if (event) {
+                event.preventDefault();
+            }
+
+            showAdminToast(
+                "Admin password recovery coming soon.",
+                "info"
+            );
+
+        }
+
+
+        // =====================================================
+        // TOAST
+        // =====================================================
+
+        let adminToastTimer = null;
+
+
+        function showAdminToast(
+            message,
+            type = "success"
+        ) {
+
+            const toast =
+                document.getElementById("adminToast");
+
+            const toastMessage =
+                document.getElementById(
+                    "adminToastMessage"
+                );
+
+            const toastIcon =
+                document.getElementById(
+                    "adminToastIcon"
+                );
+
+
+            if (!toast || !toastMessage) {
+
+                alert(message);
+
+                return;
+
+            }
+
+
+            toastMessage.textContent =
+                message;
+
+
+            if (toastIcon) {
+
+                toastIcon.className =
+                    "fa-solid";
+
+
+                if (type === "error") {
+
+                    toastIcon.classList.add(
+                        "fa-circle-xmark"
+                    );
+
+                } else if (type === "info") {
+
+                    toastIcon.classList.add(
+                        "fa-circle-info"
+                    );
+
+                } else {
+
+                    toastIcon.classList.add(
+                        "fa-circle-check"
+                    );
+
+                }
+
+            }
+
+
+            toast.style.display =
+                "block";
+
+
+            clearTimeout(
+                adminToastTimer
+            );
+
+
+            adminToastTimer =
+                setTimeout(
+                    function() {
+
+                        toast.style.display =
+                            "none";
+
+                    },
+                    3000
+                );
+
+        }
+
+
+        // =====================================================
+        // ADMIN LOGIN
+        // =====================================================
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function() {
+
+                const form =
+                    document.getElementById(
+                        "adminLoginForm"
+                    );
+
+
+                if (!form) {
+                    return;
+                }
+
+
+                form.addEventListener(
+                    "submit",
+                    async function(event) {
+
+                        event.preventDefault();
+
+
+                        const username =
+                            document
+                            .getElementById(
+                                "adminUsername"
+                            )
+                            .value
+                            .trim();
+
+
+                        const password =
+                            document
+                            .getElementById(
+                                "adminPassword"
+                            )
+                            .value;
+
+
+                        const rememberMe =
+                            document
+                            .getElementById(
+                                "adminRememberMe"
+                            )
+                            .checked;
+
+
+                        const button =
+                            document.getElementById(
+                                "adminLoginButton"
+                            );
+
+
+                        const message =
+                            document.getElementById(
+                                "adminMessage"
+                            );
+
+
+                        // =====================================
+                        // VALIDATION
+                        // =====================================
+
+                        if (!username) {
+
+                            showAdminToast(
+                                "Enter admin username.",
+                                "error"
+                            );
+
+                            return;
+
+                        }
+
+
+                        if (!password) {
+
+                            showAdminToast(
+                                "Enter admin password.",
+                                "error"
+                            );
+
+                            return;
+
+                        }
+
+
+                        // =====================================
+                        // BUTTON LOADING
+                        // =====================================
+
+                        if (button) {
+
+                            button.disabled = true;
+
+                            button.innerHTML =
+                                `
+                                <i class="fa-solid fa-spinner fa-spin"></i>
+                                &nbsp;
+                                Logging in...
+                                `;
+
+                        }
+
+
+                        try {
+
+                            // =================================
+                            // ADMIN DEMO LOGIN
+                            //
+                            // Current credentials:
+                            //
+                            // admin
+                            // admin123
+                            // =================================
+
+                            if (
+                                (
+                                    username === "admin" ||
+                                    username === "admin@example.com"
+                                ) &&
+                                password === "admin123"
+                            ) {
+
+                                const adminUser = {
+
+                                    id: 10,
+
+                                    name: "Admin",
+
+                                    email: "admin@example.com",
+
+                                    role: "ADMIN"
+
+                                };
+
+
+                                // Save using project
+                                // storage format
+
+                                if (
+                                    typeof setCurrentUser ===
+                                    "function"
+                                ) {
+
+                                    setCurrentUser(
+                                        adminUser
+                                    );
+
+                                } else {
+
+                                    localStorage.setItem(
+                                        "scp_user",
+                                        JSON.stringify(
+                                            adminUser
+                                        )
+                                    );
+
+                                }
+
+
+                                if (rememberMe) {
+
+                                    localStorage.setItem(
+                                        "scp_remember_me",
+                                        "true"
+                                    );
+
+                                } else {
+
+                                    localStorage.removeItem(
+                                        "scp_remember_me"
+                                    );
+
+                                }
+
+
+                                if (message) {
+
+                                    message.textContent =
+                                        "Admin login successful.";
+
+                                    message.className =
+                                        "message success-message";
+
+                                }
+
+
+                                showAdminToast(
+                                    "Admin login successful!",
+                                    "success"
+                                );
+
+
+                                // =================================
+                                // REDIRECT
+                                // =================================
+
+                                setTimeout(
+                                    function() {
+
+                                        window.location.href =
+                                            "admin-dashboard.html";
+
+                                    },
+                                    700
+                                );
+
+
+                                return;
+
+                            }
+
+
+                            // =================================
+                            // INVALID LOGIN
+                            // =================================
+
+                            throw new Error(
+                                "Invalid admin username or password."
+                            );
+
+
+                        } catch (error) {
+
+                            console.error(
+                                "Admin Login Error:",
+                                error
+                            );
+
+
+                            if (message) {
+
+                                message.textContent =
+                                    error.message;
+
+                                message.className =
+                                    "message error-message";
+
+                            }
+
+
+                            showAdminToast(
+                                error.message,
+                                "error"
+                            );
+
+
+                            if (button) {
+
+                                button.disabled = false;
+
+                                button.innerHTML =
+                                    `
+                                    <i class="fa-solid fa-right-to-bracket"></i>
+                                    &nbsp;
+                                    Login as Admin
+                                    `;
+
+                            }
+
+                        }
+
+                    }
+                );
+
+
+                console.log(
+                    "🚗 Smart Car Parking Admin Login Ready"
+                );
+
+            }
+        );
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register - Smart Car Parking</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+
+<body class="center-page">
+
+    <div class="auth-box">
+
+        <!-- BRAND -->
+        <div class="brand-mark small">
+            P🚗
+        </div>
+
+
+        <!-- TITLE -->
+        <h2>
+            Create Account
+        </h2>
+
+        <p class="muted">
+            Register for Smart Car Parking
+        </p>
+
+
+        <!-- REGISTER FORM -->
+        <form id="registerForm">
+
+            <!-- NAME -->
+            <label for="name">
+                Full Name
+            </label>
+
+            <input id="name" name="name" type="text" placeholder="Enter your full name" autocomplete="name" required>
+
+
+            <!-- EMAIL -->
+            <label for="email">
+                Email Address
+            </label>
+
+            <input id="email" name="email" type="email" placeholder="Enter your email" autocomplete="email" required>
+
+
+            <!-- PHONE -->
+            <label for="phone">
+                Phone Number
+            </label>
+
+            <input id="phone" name="phone" type="tel" placeholder="Enter your phone number" autocomplete="tel" maxlength="20" required>
+
+
+            <!-- PASSWORD -->
+            <label for="password">
+                Password
+            </label>
+
+            <input id="password" name="password" type="password" placeholder="Create a password" autocomplete="new-password" minlength="6" required>
+
+
+            <!-- CONFIRM PASSWORD -->
+            <label for="confirmPassword">
+                Confirm Password
+            </label>
+
+            <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Confirm your password" autocomplete="new-password" minlength="6" required>
+
+
+            <!-- TERMS -->
+            <div class="form-line">
+
+                <label>
+                    <input
+                        id="terms"
+                        type="checkbox"
+                        required
+                    >
+
+                    I agree to the terms
+                </label>
+
+            </div>
+
+
+            <!-- REGISTER BUTTON -->
+            <button class="primary-btn" type="submit">
+                🚗 Create Account
+            </button>
+
+        </form>
+
+
+        <!-- MESSAGE -->
+        <div id="registerMessage" class="message"></div>
+
+
+        <!-- LOGIN LINK -->
+        <p class="register-text">
+
+            Already have an account?
+
+            <a href="index.html">
+                Login here
+            </a>
+
+        </p>
+
+    </div>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script src="js/register.js"></script>
+
+
+    <!-- CONFIRM PASSWORD CHECK -->
+
+    <script>
+        document
+            .getElementById("registerForm")
+            .addEventListener("submit", function(event) {
+
+                const password =
+                    document.getElementById("password").value;
+
+                const confirmPassword =
+                    document.getElementById("confirmPassword").value;
+
+                const message =
+                    document.getElementById("registerMessage");
+
+
+                if (password !== confirmPassword) {
+
+                    event.preventDefault();
+
+                    message.textContent =
+                        "Passwords do not match.";
+
+                    return;
+                }
+
+            });
+    </script>
+
+</body>
+
+</html>

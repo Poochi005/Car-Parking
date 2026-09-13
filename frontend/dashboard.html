@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - Smart Car Parking</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /* =====================================================
+           PREMIUM DASHBOARD BACKGROUND
+        ===================================================== */
+        
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(circle at top left, rgba(37, 99, 235, 0.35), transparent 35%), radial-gradient(circle at bottom right, rgba(6, 182, 212, 0.25), transparent 35%), linear-gradient(135deg, #07111f 0%, #0f172a 45%, #12344a 100%);
+            background-attachment: fixed;
+        }
+        
+        .layout {
+            min-height: 100vh;
+        }
+        /* Main area gets a soft premium glass background */
+        
+        .main {
+            background: linear-gradient( 135deg, rgba(248, 250, 252, 0.97), rgba(239, 246, 255, 0.97), rgba(236, 253, 245, 0.94));
+            min-height: 100vh;
+        }
+        /* Page content spacing */
+        
+        .page-content {
+            padding-bottom: 40px;
+        }
+        /* Premium panels */
+        
+        .panel {
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+        }
+        /* Premium stat cards */
+        
+        .stat-card {
+            border-radius: 18px;
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 32px rgba(15, 23, 42, 0.14);
+        }
+        /* Premium slot cards */
+        
+        .slot {
+            border-radius: 14px;
+            transition: all 0.25s ease;
+        }
+        
+        .slot:hover {
+            transform: translateY(-3px);
+        }
+        /* Vehicle cards */
+        
+        .vehicle-card {
+            border-radius: 14px;
+            transition: all 0.25s ease;
+        }
+        
+        .vehicle-card:hover {
+            transform: translateY(-2px);
+        }
+        /* AI recommendation */
+        
+        .recommendation {
+            border-radius: 15px;
+        }
+        /* Selected slot */
+        
+        .location-box {
+            border-radius: 15px;
+        }
+        /* System status */
+        
+        .status-card {
+            border-radius: 14px;
+            margin-bottom: 10px;
+        }
+        /* Mobile */
+        
+        @media (max-width: 768px) {
+            body {
+                background-attachment: scroll;
+            }
+            .main {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <!-- =====================================================
+             SIDEBAR
+        ====================================================== -->
+
+        <aside class="sidebar">
+
+            <div class="side-brand">
+
+                <div class="side-logo">
+                    🚗
+                </div>
+
+                <span>
+                    Smart Parking
+                </span>
+
+            </div>
+
+            <nav class="nav">
+
+                <a href="dashboard.html" class="active">
+                    🏠 Dashboard
+                </a>
+
+                <a href="parking-slots.html">
+                    🅿️ Parking Slots
+                </a>
+
+                <a href="vehicles.html">
+                    🚘 My Vehicles
+                </a>
+
+                <a href="bookings.html">
+                    📅 My Bookings
+                </a>
+
+                <a href="map.html">
+                    🗺️ Live Map
+                </a>
+
+                <a href="products.html">
+                    🛒 Products
+                </a>
+
+                <a href="cart.html">
+                    🛍️ Cart
+                </a>
+
+                <a href="orders.html">
+                    📦 Orders
+                </a>
+
+            </nav>
+
+            <div class="side-bottom">
+
+                <div class="ai-status">
+
+                    <strong>
+                        🤖 AI Parking
+                    </strong>
+
+                    <p>
+                        System Online
+                    </p>
+
+                    <small>
+                        Smart slot recommendation active
+                    </small>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================================
+             MAIN
+        ====================================================== -->
+
+        <main class="main">
+
+            <!-- =================================================
+                 TOP BAR
+            ================================================== -->
+
+            <header class="topbar">
+
+                <div>
+
+                    <strong>
+                        Smart Car Parking
+                    </strong>
+
+                </div>
+
+                <div class="top-user">
+
+                    <div>
+
+                        <strong id="userName">
+                            User
+                        </strong>
+
+                        <small id="userEmail" class="muted">
+                            user@example.com
+                        </small>
+
+                    </div>
+
+                    <div class="avatar" id="userAvatar">
+                        U
+                    </div>
+
+                    <button class="outline-btn compact" onclick="logout()">
+                        Logout
+                    </button>
+
+                </div>
+
+            </header>
+
+
+            <!-- =================================================
+                 PAGE CONTENT
+            ================================================== -->
+
+            <section class="page-content">
+
+
+                <!-- =================================================
+                     PAGE HEADER
+                ================================================== -->
+
+                <div class="page-head">
+
+                    <div>
+
+                        <h1>
+                            Dashboard
+                        </h1>
+
+                        <p class="muted">
+                            Welcome to your Smart Car Parking dashboard.
+                        </p>
+
+                    </div>
+
+                    <button class="primary-btn" onclick="loadDashboard()">
+                        🔄 Refresh
+                    </button>
+
+                </div>
+
+
+                <!-- =================================================
+                     STATISTICS
+                ================================================== -->
+
+                <div class="stats">
+
+                    <div class="stat-card">
+
+                        <b id="totalSlots">
+                            0
+                        </b>
+
+                        <span>
+                            Total Parking Slots
+                        </span>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <b id="availableSlots">
+                            0
+                        </b>
+
+                        <span>
+                            Available Slots
+                        </span>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <b id="occupiedSlots">
+                            0
+                        </b>
+
+                        <span>
+                            Occupied Slots
+                        </span>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <b id="vehicleCount">
+                            0
+                        </b>
+
+                        <span>
+                            My Vehicles
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     AI RECOMMENDATION
+                ================================================== -->
+
+                <div class="panel">
+
+                    <h3>
+                        🤖 AI Smart Recommendation
+                    </h3>
+
+                    <div id="recommendation" class="recommendation">
+                        Loading parking recommendation...
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     PARKING + VEHICLES
+                ================================================== -->
+
+                <div class="two-col">
+
+
+                    <!-- PARKING SLOTS -->
+
+                    <div class="panel">
+
+                        <h3>
+                            🅿️ Parking Slots
+                        </h3>
+
+                        <p class="muted">
+                            Live parking slot status
+                        </p>
+
+                        <div id="slotGrid" class="slot-grid small-grid">
+                        </div>
+
+                        <div id="slotMessage" class="empty">
+                            Loading parking slots...
+                        </div>
+
+                    </div>
+
+
+                    <!-- VEHICLES -->
+
+                    <div class="panel">
+
+                        <h3>
+                            🚘 My Vehicles
+                        </h3>
+
+                        <p class="muted">
+                            Vehicles registered in the system
+                        </p>
+
+                        <div id="vehicleList">
+                        </div>
+
+                        <div id="vehicleMessage" class="empty">
+                            Loading vehicles...
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     SELECTED SLOT
+                ================================================== -->
+
+                <div class="panel">
+
+                    <h3>
+                        📍 Selected Parking Slot
+                    </h3>
+
+                    <div id="selectedSlot" class="location-box">
+                        Select an available parking slot above.
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     SYSTEM STATUS
+                ================================================== -->
+
+                <div class="panel">
+
+                    <h3>
+                        🟢 System Status
+                    </h3>
+
+
+                    <div class="status-card">
+
+                        <span class="dot green"></span>
+
+                        <div>
+
+                            <strong>
+                                Backend API
+                            </strong>
+
+                            <div class="muted">
+                                http://localhost:8081
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="status-card">
+
+                        <span class="dot green"></span>
+
+                        <div>
+
+                            <strong>
+                                Parking Slot API
+                            </strong>
+
+                            <div class="muted">
+                                Connected
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="status-card">
+
+                        <span class="dot green"></span>
+
+                        <div>
+
+                            <strong>
+                                Vehicle API
+                            </strong>
+
+                            <div class="muted">
+                                Connected
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DASHBOARD MESSAGE -->
+
+                <div id="dashboardMessage" class="message">
+                </div>
+
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <!-- config.js must load FIRST -->
+    <script src="js/config.js"></script>
+
+    <!-- auth.js must load SECOND -->
+    <script src="js/auth.js"></script>
+
+
+    <script>
+        // ========================================================
+        // CURRENT USER
+        // ========================================================
+
+        const currentUser = getUser();
+
+
+        if (!currentUser) {
+
+            window.location.href = "login.html";
+
+        }
+
+
+        // ========================================================
+        // DISPLAY USER
+        // ========================================================
+
+        if (currentUser) {
+
+            document.getElementById("userName").textContent =
+                currentUser.name || "User";
+
+
+            document.getElementById("userEmail").textContent =
+                currentUser.email || "";
+
+
+            const name =
+                currentUser.name || "U";
+
+
+            document.getElementById("userAvatar").textContent =
+                name.charAt(0).toUpperCase();
+
+        }
+
+
+        // ========================================================
+        // GLOBAL DATA
+        // ========================================================
+
+        let parkingSlots = [];
+
+        let vehicles = [];
+
+        let selectedSlot = null;
+
+
+        // ========================================================
+        // LOAD DASHBOARD
+        // ========================================================
+
+        async function loadDashboard() {
+
+            showMessage(
+                "Loading dashboard...",
+                false
+            );
+
+
+            try {
+
+                await Promise.all([
+                    loadParkingSlots(),
+                    loadVehicles()
+                ]);
+
+
+                updateStatistics();
+
+                generateRecommendation();
+
+
+                showMessage(
+                    "Dashboard updated successfully.",
+                    false
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Dashboard error:",
+                    error
+                );
+
+
+                showMessage(
+                    "Unable to load dashboard data. Check Spring Boot server.",
+                    true
+                );
+
+            }
+
+        }
+
+
+        // ========================================================
+        // LOAD PARKING SLOTS
+        // ========================================================
+
+        async function loadParkingSlots() {
+
+            const response =
+                await fetch(API.parkingSlots);
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Parking Slots API error: " +
+                    response.status
+                );
+
+            }
+
+
+            parkingSlots =
+                await response.json();
+
+
+            console.log(
+                "Parking Slots:",
+                parkingSlots
+            );
+
+
+            renderParkingSlots();
+
+        }
+
+
+        // ========================================================
+        // RENDER PARKING SLOTS
+        // ========================================================
+
+        function renderParkingSlots() {
+
+            const grid =
+                document.getElementById("slotGrid");
+
+            const message =
+                document.getElementById("slotMessage");
+
+
+            grid.innerHTML = "";
+
+
+            if (!parkingSlots.length) {
+
+                message.textContent =
+                    "No parking slots found.";
+
+                message.style.display =
+                    "block";
+
+                return;
+
+            }
+
+
+            message.style.display =
+                "none";
+
+
+            parkingSlots.forEach(function(slot) {
+
+                const div =
+                    document.createElement("div");
+
+
+                const status =
+                    String(
+                        slot.status || "AVAILABLE"
+                    ).toUpperCase();
+
+
+                const available =
+                    status === "AVAILABLE";
+
+
+                div.className =
+                    "slot " +
+                    (
+                        available ?
+                        "available" :
+                        "occupied"
+                    );
+
+
+                div.innerHTML = `
+
+                    <strong>
+                        ${escapeHTML(slot.slotNumber)}
+                    </strong>
+
+                    <small>
+                        ${escapeHTML(
+                            slot.vehicleType || "Vehicle"
+                        )}
+                    </small>
+
+                    <small>
+                        ${escapeHTML(
+                            slot.slotSize || ""
+                        )}
+                    </small>
+
+                    <small>
+                        ₹${Number(
+                            slot.pricePerHour || 0
+                        ).toFixed(2)}/hr
+                    </small>
+
+                    <span
+                        class="badge"
+                        style="
+                            margin-top:8px;
+                            ${
+                                available
+                                    ? ""
+                                    : "background:#ffe7e7;color:#c72e3a;"
+                            }
+                        "
+                    >
+                        ${
+                            available
+                                ? "AVAILABLE"
+                                : "OCCUPIED"
+                        }
+                    </span>
+
+                `;
+
+
+                if (available) {
+
+                    div.addEventListener(
+                        "click",
+                        function() {
+
+                            selectSlot(slot);
+
+                        }
+                    );
+
+                }
+
+
+                grid.appendChild(div);
+
+            });
+
+        }
+
+
+        // ========================================================
+        // SELECT SLOT
+        // ========================================================
+
+        function selectSlot(slot) {
+
+            selectedSlot = slot;
+
+
+            const selected =
+                document.getElementById(
+                    "selectedSlot"
+                );
+
+
+            selected.innerHTML = `
+
+                <strong>
+                    🅿️ ${escapeHTML(
+                        slot.slotNumber
+                    )}
+                </strong>
+
+                <br>
+
+                Floor:
+                ${escapeHTML(
+                    slot.floor || "-"
+                )}
+
+                <br>
+
+                Section:
+                ${escapeHTML(
+                    slot.section || "-"
+                )}
+
+                <br>
+
+                Vehicle Type:
+                ${escapeHTML(
+                    slot.vehicleType || "-"
+                )}
+
+                <br>
+
+                Slot Size:
+                ${escapeHTML(
+                    slot.slotSize || "-"
+                )}
+
+                <br>
+
+                Price:
+                ₹${Number(
+                    slot.pricePerHour || 0
+                ).toFixed(2)}/hour
+
+                <br><br>
+
+                <span class="badge">
+                    AVAILABLE
+                </span>
+
+            `;
+
+        }
+
+
+        // ========================================================
+        // LOAD VEHICLES
+        // ========================================================
+
+        async function loadVehicles() {
+
+            try {
+
+                const response =
+                    await fetch(API.vehicles);
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Vehicle API error: " +
+                        response.status
+                    );
+
+                }
+
+
+                const allVehicles =
+                    await response.json();
+
+
+                console.log(
+                    "All Vehicles:",
+                    allVehicles
+                );
+
+
+                /*
+                 * Current account = User ID 10
+                 * Backend contains vehicles for userId 10.
+                 */
+
+                vehicles =
+                    allVehicles.filter(
+                        function(vehicle) {
+
+                            return Number(
+                                vehicle.userId
+                            ) === 10;
+
+                        }
+                    );
+
+
+                console.log(
+                    "My Vehicles:",
+                    vehicles
+                );
+
+
+                renderVehicles();
+
+            } catch (error) {
+
+                console.error(
+                    "Vehicle loading error:",
+                    error
+                );
+
+
+                vehicles = [];
+
+                renderVehicles();
+
+            }
+
+        }
+
+
+        // ========================================================
+        // RENDER VEHICLES
+        // ========================================================
+
+        function renderVehicles() {
+
+            const list =
+                document.getElementById(
+                    "vehicleList"
+                );
+
+
+            const message =
+                document.getElementById(
+                    "vehicleMessage"
+                );
+
+
+            list.innerHTML = "";
+
+
+            if (!vehicles.length) {
+
+                message.textContent =
+                    "No vehicles registered for this account.";
+
+                message.style.display =
+                    "block";
+
+                return;
+
+            }
+
+
+            message.style.display =
+                "none";
+
+
+            vehicles.forEach(
+                function(vehicle) {
+
+                    const div =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    div.className =
+                        "vehicle-card";
+
+
+                    div.innerHTML = `
+
+                        <div>
+
+                            <strong>
+                                🚘 ${escapeHTML(
+                                    vehicle.vehicleNumber
+                                )}
+                            </strong>
+
+                            <div class="muted">
+
+                                ${escapeHTML(
+                                    vehicle.vehicleModel || ""
+                                )}
+
+                            </div>
+
+                            <small>
+
+                                ${escapeHTML(
+                                    vehicle.vehicleType || ""
+                                )}
+
+                                ·
+
+                                ${escapeHTML(
+                                    vehicle.vehicleColor || ""
+                                )}
+
+                                ·
+
+                                ${escapeHTML(
+                                    vehicle.vehicleSize || ""
+                                )}
+
+                            </small>
+
+                        </div>
+
+                        <span class="badge">
+                            ACTIVE
+                        </span>
+
+                    `;
+
+
+                    list.appendChild(div);
+
+                }
+            );
+
+        }
+
+
+        // ========================================================
+        // UPDATE STATISTICS
+        // ========================================================
+
+        function updateStatistics() {
+
+            const total =
+                parkingSlots.length;
+
+
+            const available =
+                parkingSlots.filter(
+                    function(slot) {
+
+                        return String(
+                                slot.status || ""
+                            ).toUpperCase() ===
+                            "AVAILABLE";
+
+                    }
+                ).length;
+
+
+            const occupied =
+                parkingSlots.filter(
+                    function(slot) {
+
+                        return String(
+                                slot.status || ""
+                            ).toUpperCase() ===
+                            "OCCUPIED";
+
+                    }
+                ).length;
+
+
+            document.getElementById(
+                    "totalSlots"
+                ).textContent =
+                total;
+
+
+            document.getElementById(
+                    "availableSlots"
+                ).textContent =
+                available;
+
+
+            document.getElementById(
+                    "occupiedSlots"
+                ).textContent =
+                occupied;
+
+
+            document.getElementById(
+                    "vehicleCount"
+                ).textContent =
+                vehicles.length;
+
+        }
+
+
+        // ========================================================
+        // AI RECOMMENDATION
+        // ========================================================
+
+        function generateRecommendation() {
+
+            const recommendation =
+                document.getElementById(
+                    "recommendation"
+                );
+
+
+            const availableSlots =
+                parkingSlots.filter(
+                    function(slot) {
+
+                        return String(
+                                slot.status || ""
+                            ).toUpperCase() ===
+                            "AVAILABLE";
+
+                    }
+                );
+
+
+            if (!availableSlots.length) {
+
+                recommendation.innerHTML = `
+
+                    <strong>
+                        ⚠️ No available slots
+                    </strong>
+
+                    <br>
+
+                    All parking slots are currently occupied.
+                    Please try again later.
+
+                `;
+
+                return;
+
+            }
+
+
+            /*
+             * Simple AI recommendation:
+             * Cheapest available slot first.
+             */
+
+            const bestSlot = [...availableSlots].sort(
+                function(a, b) {
+
+                    return Number(
+                            a.pricePerHour || 0
+                        ) -
+                        Number(
+                            b.pricePerHour || 0
+                        );
+
+                }
+            )[0];
+
+
+            recommendation.innerHTML = `
+
+                <strong>
+                    🤖 Recommended Slot:
+                    ${escapeHTML(
+                        bestSlot.slotNumber
+                    )}
+                </strong>
+
+                <br>
+
+                This slot is available and currently
+                has the lowest parking price.
+
+                <br>
+
+                <strong>
+                    ₹${Number(
+                        bestSlot.pricePerHour || 0
+                    ).toFixed(2)}/hour
+                </strong>
+
+                ·
+
+                ${escapeHTML(
+                    bestSlot.slotSize || ""
+                )}
+
+                ·
+
+                ${escapeHTML(
+                    bestSlot.vehicleType || ""
+                )}
+
+            `;
+
+        }
+
+
+        // ========================================================
+        // MESSAGE
+        // ========================================================
+
+        function showMessage(
+            text,
+            isError
+        ) {
+
+            const element =
+                document.getElementById(
+                    "dashboardMessage"
+                );
+
+
+            element.textContent =
+                text;
+
+
+            element.style.color =
+                isError ?
+                "#d12f3c" :
+                "#198944";
+
+        }
+
+
+        // ========================================================
+        // HTML SECURITY
+        // ========================================================
+
+        function escapeHTML(value) {
+
+            return String(value || "")
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+
+        }
+
+
+        // ========================================================
+        // INITIAL LOAD
+        // ========================================================
+
+        if (currentUser) {
+
+            loadDashboard();
+
+        }
+
+
+        // ========================================================
+        // AUTO REFRESH
+        // ========================================================
+
+        setInterval(
+            function() {
+
+                if (currentUser) {
+
+                    loadDashboard();
+
+                }
+
+            },
+            5000
+        );
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard - Smart Car Parking</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+        <aside class="sidebar">
+
+            <div class="side-brand">
+
+                <div class="side-logo">
+                    <i class="fa-solid fa-square-parking"></i>
+                </div>
+
+                <span>
+                Smart Parking
+            </span>
+
+            </div>
+
+
+            <nav class="nav">
+
+                <a href="admin-dashboard.html" class="active">
+                    <i class="fa-solid fa-chart-line"></i> &nbsp; Dashboard
+                </a>
+
+                <a href="parking-slots.html">
+                    <i class="fa-solid fa-square-parking"></i> &nbsp; Parking Slots
+                </a>
+
+                <a href="vehicles.html">
+                    <i class="fa-solid fa-car"></i> &nbsp; Vehicles
+                </a>
+
+                <a href="bookings.html">
+                    <i class="fa-solid fa-calendar-check"></i> &nbsp; Bookings
+                </a>
+
+                <a href="payments.html">
+                    <i class="fa-solid fa-credit-card"></i> &nbsp; Payments
+                </a>
+
+                <a href="history.html">
+                    <i class="fa-solid fa-clock-rotate-left"></i> &nbsp; History
+                </a>
+
+                <a href="profile.html">
+                    <i class="fa-solid fa-user"></i> &nbsp; Profile
+                </a>
+
+                <a href="index.html">
+                    <i class="fa-solid fa-arrow-left"></i> &nbsp; User Login
+                </a>
+
+            </nav>
+
+
+            <div class="side-bottom">
+
+                <div class="ai-status">
+
+                    <h4>
+                        <i class="fa-solid fa-robot"></i> AI Parking
+                    </h4>
+
+                    <p>
+                        Smart parking monitoring active
+                    </p>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+
+        <header class="topbar">
+
+            <div>
+
+                <button class="menu-button" type="button" onclick="toggleSidebar()">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+            </div>
+
+
+            <div class="top-user">
+
+                <div class="avatar" id="adminAvatar">
+                    A
+                </div>
+
+                <div>
+
+                    <strong id="adminName">
+                    Administrator
+                </strong>
+
+                    <div class="muted">
+                        Admin
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+        <main class="main">
+
+            <div class="page-content">
+
+
+                <!-- PAGE HEADER -->
+
+                <div class="page-head">
+
+                    <div>
+
+                        <h1>
+                            Admin Dashboard
+                        </h1>
+
+                        <p>
+                            Smart Car Parking Management System
+                        </p>
+
+                    </div>
+
+
+                    <button class="danger-btn" type="button" onclick="adminLogout()">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Logout
+
+                </button>
+
+                </div>
+
+
+                <!-- =================================================
+                 STATISTICS
+            ================================================== -->
+
+                <div class="stats">
+
+
+                    <div class="stat-card">
+
+                        <b id="totalSlots">
+                        0
+                    </b>
+
+                        <span>
+                        Total Parking Slots
+                    </span>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <b id="availableSlots">
+                        0
+                    </b>
+
+                        <span>
+                        Available Slots
+                    </span>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <b id="occupiedSlots">
+                        0
+                    </b>
+
+                        <span>
+                        Occupied Slots
+                    </span>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <b id="totalVehicles">
+                        0
+                    </b>
+
+                        <span>
+                        Registered Vehicles
+                    </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                 SECOND ROW
+            ================================================== -->
+
+                <div class="stats mini">
+
+
+                    <div class="stat-card">
+
+                        <b id="totalBookings">
+                        0
+                    </b>
+
+                        <span>
+                        Total Bookings
+                    </span>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <b id="totalPayments">
+                        0
+                    </b>
+
+                        <span>
+                        Total Payments
+                    </span>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <b id="totalRevenue">
+                        ₹0.00
+                    </b>
+
+                        <span>
+                        Total Revenue
+                    </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                 PARKING STATUS
+            ================================================== -->
+
+                <div class="two-col">
+
+
+                    <section class="panel">
+
+                        <h3>
+                            <i class="fa-solid fa-square-parking"></i> Parking Status
+                        </h3>
+
+                        <div id="parkingStatus">
+
+                            <div class="loading">
+
+                                <div class="spinner"></div>
+
+                                Loading parking slots...
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- RECENT BOOKINGS -->
+
+                    <section class="panel">
+
+                        <h3>
+                            <i class="fa-solid fa-calendar-check"></i> Recent Bookings
+                        </h3>
+
+                        <div id="recentBookings">
+
+                            <div class="loading">
+
+                                <div class="spinner"></div>
+
+                                Loading bookings...
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+
+                <!-- =================================================
+                 SYSTEM STATUS
+            ================================================== -->
+
+                <section class="panel">
+
+                    <h3>
+                        <i class="fa-solid fa-server"></i> System Status
+                    </h3>
+
+
+                    <div class="status-card">
+
+                        <span class="dot green"></span>
+
+                        <div>
+
+                            <strong>
+                            Backend API
+                        </strong>
+
+                            <p class="muted" id="backendStatus">
+                                Checking...
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="status-card">
+
+                        <span class="dot green"></span>
+
+                        <div>
+
+                            <strong>
+                            Parking Service
+                        </strong>
+
+                            <p class="muted">
+                                Monitoring active
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="status-card">
+
+                        <span class="dot green"></span>
+
+                        <div>
+
+                            <strong>
+                            Database
+                        </strong>
+
+                            <p class="muted">
+                                Connected through Spring Boot
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                 QUICK ACTIONS
+            ================================================== -->
+
+                <section class="panel">
+
+                    <h3>
+                        Quick Actions
+                    </h3>
+
+
+                    <div class="form-grid">
+
+
+                        <button class="primary-btn" type="button" onclick="window.location.href='parking-slots.html'">
+
+                        <i class="fa-solid fa-square-parking"></i>
+
+                        Manage Parking Slots
+
+                    </button>
+
+
+                        <button class="primary-btn" type="button" onclick="window.location.href='vehicles.html'">
+
+                        <i class="fa-solid fa-car"></i>
+
+                        Manage Vehicles
+
+                    </button>
+
+
+                        <button class="primary-btn" type="button" onclick="window.location.href='bookings.html'">
+
+                        <i class="fa-solid fa-calendar-check"></i>
+
+                        Manage Bookings
+
+                    </button>
+
+
+                        <button class="success-btn" type="button" onclick="window.location.href='payments.html'">
+
+                        <i class="fa-solid fa-chart-line"></i>
+
+                        Revenue & Payments
+
+                    </button>
+
+                    </div>
+
+                </section>
+
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- =====================================================
+     JAVASCRIPT
+====================================================== -->
+
+    <script src="js/config.js"></script>
+
+    <script src="js/admin.js"></script>
+
+
+    <script>
+        document.addEventListener(
+            "DOMContentLoaded",
+            function() {
+
+                loadAdminDashboard();
+
+            }
+        );
+
+
+        /* =====================================================
+           LOAD DASHBOARD
+        ===================================================== */
+
+        async function loadAdminDashboard() {
+
+            try {
+
+                loadAdminUser();
+
+                await loadParkingStats();
+
+                await loadVehicleStats();
+
+                await loadBookingStats();
+
+                await loadPaymentStats();
+
+                document.getElementById(
+                        "backendStatus"
+                    ).textContent =
+                    "Backend API connected";
+
+
+            } catch (error) {
+
+                console.error(
+                    "Dashboard loading error:",
+                    error
+                );
+
+                const status =
+                    document.getElementById(
+                        "backendStatus"
+                    );
+
+                if (status) {
+
+                    status.textContent =
+                        "Backend connection failed";
+
+                }
+
+            }
+
+        }
+
+
+        /* =====================================================
+           ADMIN USER
+        ===================================================== */
+
+        function loadAdminUser() {
+
+            const username =
+                localStorage.getItem("adminUser") ||
+                sessionStorage.getItem("adminUser") ||
+                "Administrator";
+
+
+            const nameElement =
+                document.getElementById("adminName");
+
+
+            const avatarElement =
+                document.getElementById("adminAvatar");
+
+
+            if (nameElement) {
+
+                nameElement.textContent =
+                    username;
+
+            }
+
+
+            if (avatarElement) {
+
+                avatarElement.textContent =
+                    username.charAt(0).toUpperCase();
+
+            }
+
+        }
+
+
+        /* =====================================================
+           PARKING STATS
+        ===================================================== */
+
+        async function loadParkingStats() {
+
+            try {
+
+                const data =
+                    await apiGet(
+                        API.parkingSlots.all
+                    );
+
+
+                const slots =
+                    Array.isArray(data) ?
+                    data :
+                    data.content || [];
+
+
+                const total =
+                    slots.length;
+
+
+                const available =
+                    slots.filter(
+                        slot =>
+                        String(
+                            slot.status || ""
+                        ).toUpperCase() ===
+                        "AVAILABLE"
+                    ).length;
+
+
+                const occupied =
+                    slots.filter(
+                        slot =>
+                        String(
+                            slot.status || ""
+                        ).toUpperCase() ===
+                        "OCCUPIED"
+                    ).length;
+
+
+                document.getElementById(
+                    "totalSlots"
+                ).textContent = total;
+
+
+                document.getElementById(
+                    "availableSlots"
+                ).textContent = available;
+
+
+                document.getElementById(
+                    "occupiedSlots"
+                ).textContent = occupied;
+
+
+                renderParkingStatus(
+                    slots
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Parking API error:",
+                    error
+                );
+
+                document.getElementById(
+                        "parkingStatus"
+                    ).innerHTML =
+                    '<div class="empty">Unable to load parking slots</div>';
+
+            }
+
+        }
+
+
+        /* =====================================================
+           PARKING STATUS UI
+        ===================================================== */
+
+        function renderParkingStatus(slots) {
+
+            const container =
+                document.getElementById(
+                    "parkingStatus"
+                );
+
+
+            if (!slots.length) {
+
+                container.innerHTML =
+                    '<div class="empty">No parking slots found</div>';
+
+                return;
+
+            }
+
+
+            const available =
+                slots.filter(
+                    slot =>
+                    String(
+                        slot.status || ""
+                    ).toUpperCase() ===
+                    "AVAILABLE"
+                ).length;
+
+
+            const occupied =
+                slots.filter(
+                    slot =>
+                    String(
+                        slot.status || ""
+                    ).toUpperCase() ===
+                    "OCCUPIED"
+                ).length;
+
+
+            container.innerHTML = `
+
+        <div class="status-card">
+
+            <span class="dot green"></span>
+
+            <strong>
+                Available
+            </strong>
+
+            <span>
+                ${available}
+            </span>
+
+        </div>
+
+
+        <div class="status-card">
+
+            <span class="dot red"></span>
+
+            <strong>
+                Occupied
+            </strong>
+
+            <span>
+                ${occupied}
+            </span>
+
+        </div>
+
+    `;
+
+        }
+
+
+        /* =====================================================
+           VEHICLE STATS
+        ===================================================== */
+
+        async function loadVehicleStats() {
+
+            try {
+
+                const data =
+                    await apiGet(
+                        API.vehicles.all
+                    );
+
+
+                const vehicles =
+                    Array.isArray(data) ?
+                    data :
+                    data.content || [];
+
+
+                document.getElementById(
+                        "totalVehicles"
+                    ).textContent =
+                    vehicles.length;
+
+
+            } catch (error) {
+
+                console.error(
+                    "Vehicle API error:",
+                    error
+                );
+
+                document.getElementById(
+                    "totalVehicles"
+                ).textContent = "0";
+
+            }
+
+        }
+
+
+        /* =====================================================
+           BOOKING STATS
+        ===================================================== */
+
+        async function loadBookingStats() {
+
+            try {
+
+                const data =
+                    await apiGet(
+                        API.bookings.all
+                    );
+
+
+                const bookings =
+                    Array.isArray(data) ?
+                    data :
+                    data.content || [];
+
+
+                document.getElementById(
+                        "totalBookings"
+                    ).textContent =
+                    bookings.length;
+
+
+                renderRecentBookings(
+                    bookings
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Booking API error:",
+                    error
+                );
+
+                document.getElementById(
+                    "totalBookings"
+                ).textContent = "0";
+
+
+                document.getElementById(
+                        "recentBookings"
+                    ).innerHTML =
+                    '<div class="empty">Unable to load bookings</div>';
+
+            }
+
+        }
+
+
+        /* =====================================================
+           RECENT BOOKINGS
+        ===================================================== */
+
+        function renderRecentBookings(bookings) {
+
+            const container =
+                document.getElementById(
+                    "recentBookings"
+                );
+
+
+            if (!bookings.length) {
+
+                container.innerHTML =
+                    '<div class="empty">No bookings found</div>';
+
+                return;
+
+            }
+
+
+            const recent =
+                bookings.slice(-5).reverse();
+
+
+            container.innerHTML =
+                recent.map(
+                    booking => `
+
+                <div class="booking-card">
+
+                    <div class="booking-info">
+
+                        <h4>
+                            Booking #${escapeHtml(
+                                booking.id
+                            )}
+                        </h4>
+
+                        <p>
+                            Slot:
+                            ${escapeHtml(
+                                booking.slotId ||
+                                booking.slot?.slotNumber ||
+                                "-"
+                            )}
+                        </p>
+
+                    </div>
+
+                    <span class="badge blue">
+                        ${escapeHtml(
+                            booking.status ||
+                            "BOOKED"
+                        )}
+                    </span>
+
+                </div>
+
+            `
+                ).join("");
+
+        }
+
+
+        /* =====================================================
+           PAYMENT STATS
+        ===================================================== */
+
+        async function loadPaymentStats() {
+
+            try {
+
+                const data =
+                    await apiGet(
+                        API.payments.all
+                    );
+
+
+                const payments =
+                    Array.isArray(data) ?
+                    data :
+                    data.content || [];
+
+
+                document.getElementById(
+                        "totalPayments"
+                    ).textContent =
+                    payments.length;
+
+
+                const revenue =
+                    payments.reduce(
+                        (sum, payment) => {
+
+                            return sum +
+                                Number(
+                                    payment.amount ||
+                                    payment.totalAmount ||
+                                    0
+                                );
+
+                        },
+                        0
+                    );
+
+
+                document.getElementById(
+                        "totalRevenue"
+                    ).textContent =
+                    formatCurrency(
+                        revenue
+                    );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Payment API error:",
+                    error
+                );
+
+                document.getElementById(
+                    "totalPayments"
+                ).textContent = "0";
+
+
+                document.getElementById(
+                        "totalRevenue"
+                    ).textContent =
+                    formatCurrency(0);
+
+            }
+
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        function toggleSidebar() {
+
+            const sidebar =
+                document.querySelector(
+                    ".sidebar"
+                );
+
+
+            if (sidebar) {
+
+                sidebar.classList.toggle(
+                    "sidebar-open"
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           ADMIN LOGOUT
+        ===================================================== */
+
+        function adminLogout() {
+
+            localStorage.removeItem(
+                "adminUser"
+            );
+
+            localStorage.removeItem(
+                "adminLoggedIn"
+            );
+
+            sessionStorage.removeItem(
+                "adminUser"
+            );
+
+            sessionStorage.removeItem(
+                "adminLoggedIn"
+            );
+
+
+            window.location.href =
+                "admin.html";
+
+        }
+    </script>
+
+</body>
+
+</html>

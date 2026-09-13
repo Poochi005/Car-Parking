@@ -1,0 +1,144 @@
+package com.smartparking.controller;
+
+import com.smartparking.entity.ParkingBooking;
+import com.smartparking.entity.ParkingSlot;
+import com.smartparking.entity.Vehicle;
+import com.smartparking.repository.ParkingBookingRepository;
+import com.smartparking.repository.ParkingSlotRepository;
+import com.smartparking.repository.VehicleRepository;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/parking-bookings")
+public class ParkingBookingController {
+
+    private final ParkingBookingRepository parkingBookingRepository;
+    private final ParkingSlotRepository parkingSlotRepository;
+    private final VehicleRepository vehicleRepository;
+    private final JdbcTemplate jdbcTemplate;
+
+    public ParkingBookingController(
+            ParkingBookingRepository parkingBookingRepository,
+            ParkingSlotRepository parkingSlotRepository,
+            VehicleRepository vehicleRepository,
+            JdbcTemplate jdbcTemplate) {
+
+        this.parkingBookingRepository = parkingBookingRepository;
+        this.parkingSlotRepository = parkingSlotRepository;
+        this.vehicleRepository = vehicleRepository;
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    // GET all bookings
+    @GetMapping
+    public List<ParkingBooking> getAllBookings() {
+        return parkingBookingRepository.findAll();
+    }
+
+    // GET booking by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getBookingById(@PathVariable Integer id) {
+
+        ParkingBooking booking =
+                parkingBookingRepository.findById(id).orElse(null);
+
+        if (booking == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Booking not found with ID: " + id);
+        }
+
+        return ResponseEntity.ok(booking);
+    }
+
+    // CREATE booking
+    @PostMapping
+    public ResponseEntity<?> createBooking(
+            @RequestBody ParkingBooking booking) {
+
+        // 1. Validate user
+        if (booking.getUserId() == null) {
+            return ResponseEntity.badRequest()
+                    .body("userId is required");
+        }
+
+        Integer userCount = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM users WHERE id = ?",
+                Integer.class,
+                booking.getUserId()
+        );
+
+        if (userCount == null || userCount == 0) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("User not found with ID: "
+                            + booking.getUserId());
+        }
+
+        // 2. Validate vehicle ID
+        if (booking.getVehicleId() == null) {
+            return ResponseEntity.badRequest()
+                    .body("vehicleId is required");
+        }
+
+        Vehicle vehicle = vehicleRepository
+                .findById(booking.getVehicleId())
+                .orElse(null);
+
+        if (vehicle == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Vehicle not found with ID: "
+                            + booking.getVehicleId());
+        }
+
+        // 3. Validate vehicle belongs to user
+        if (!vehicle.getUserId().equals(booking.getUserId())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Vehicle does not belong to this user");
+        }
+
+        // 4. Validate slot ID
+        if (booking.getSlotId() == null) {
+            return ResponseEntity.badRequest()
+                    .body("slotId is required");
+        }
+
+        ParkingSlot slot = parkingSlotRepository
+                .findById(booking.getSlotId())
+                .orElse(null);
+
+        if (slot == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Parking slot not found with ID: "
+                            + booking.getSlotId());
+        }
+
+        // 5. Check slot availability
+        if (!"AVAILABLE".equalsIgnoreCase(slot.getStatus())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Parking slot " + slot.getSlotNumber()
+                            + " is already OCCUPIED.");
+        }
+
+        // 6. Set default status
+        if (booking.getStatus() == null) {
+            booking.setStatus("BOOKED");
+        }
+
+        // 7. Save booking
+        ParkingBooking savedBooking =
+                parkingBookingRepository.save(booking);
+
+        // 8. Change slot status
+        slot.setStatus("OCCUPIED");
+        parkingSlotRepository.save(slot);
+
+        // 9. Return response
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(savedBooking);
+    }
+}

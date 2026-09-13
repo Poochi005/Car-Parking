@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Smart Car Parking</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="login-page">
+    <div class="login-shell">
+        <section class="login-hero">
+            <div class="hero-overlay">
+                <div class="brand-mark">P🚗</div>
+                <h1>Smart Car Parking</h1>
+                <p>AI Powered Parking System</p>
+                <div class="feature-row">
+                    <div><b>📷</b><span>AI Slot Detection</span><small>Detect empty and occupied slots</small></div>
+                    <div><b>🚘</b><span>Number Plate Recognition</span><small>Read vehicle number automatically</small></div>
+                    <div><b>📊</b><span>Smart Recommendation</span><small>Suggest the best parking slot</small></div>
+                </div>
+            </div>
+        </section>
+        <section class="login-card">
+            <div class="login-icon">🚗</div>
+            <h2>Welcome Back!</h2>
+            <p class="muted">Login to your account</p>
+            <form id="loginForm">
+                <input id="loginEmail" type="text" placeholder="Email or Username" required>
+                <input id="loginPassword" type="password" placeholder="Password" required>
+                <div class="form-line"><label><input id="rememberMe" type="checkbox"> Remember Me</label><a href="#" onclick="alert('Contact admin to reset your password.')">Forgot Password?</a></div>
+                <button class="primary-btn" type="submit">Login</button>
+            </form>
+            <div class="or"><span>OR</span></div>
+            <button class="outline-btn" onclick="loginAsAdmin()">👤 &nbsp; Login as Admin</button>
+            <p class="register-text">Don't have an account? <a href="register.html">Register here</a></p>
+            <div id="loginMessage" class="message"></div>
+        </section>
+    </div>
+    <script src="js/login.js"></script>
+</body>
+
+</html>

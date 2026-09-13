@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Bookings - Smart Car Parking</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <!-- ================= SIDEBAR ================= -->
+
+        <aside class="sidebar">
+
+            <div class="side-brand">
+
+                <div class="side-logo">
+                    🚗
+                </div>
+
+                <span>Smart Parking</span>
+
+            </div>
+
+
+            <nav class="nav">
+
+                <a href="dashboard.html">
+                    🏠 Dashboard
+                </a>
+
+                <a href="parking-slots.html">
+                    🅿️ Parking Slots
+                </a>
+
+                <a href="vehicles.html">
+                    🚘 Vehicles
+                </a>
+
+                <a href="bookings.html" class="active">
+                    📅 Bookings
+                </a>
+
+                <a href="payments.html">
+                    💳 Payments
+                </a>
+
+                <a href="history.html">
+                    📜 History
+                </a>
+
+                <a href="profile.html">
+                    👤 Profile
+                </a>
+
+                <a href="admin.html">
+                    🛡️ Admin
+                </a>
+
+                <a href="logout.html">
+                    🚪 Logout
+                </a>
+
+            </nav>
+
+
+            <div class="side-bottom">
+
+                <div class="ai-status">
+
+                    <h4>🤖 AI System</h4>
+
+                    <p>
+                        Smart parking monitoring active
+                    </p>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- ================= MAIN ================= -->
+
+        <main class="main">
+
+
+            <!-- ================= TOPBAR ================= -->
+
+            <header class="topbar">
+
+                <div>
+                    <strong>Bookings</strong>
+                </div>
+
+
+                <div class="top-user">
+
+                    <div class="avatar" id="userAvatar">
+                        U
+                    </div>
+
+                    <span id="topUserName">
+                        User
+                    </span>
+
+                </div>
+
+            </header>
+
+
+            <!-- ================= PAGE CONTENT ================= -->
+
+            <section class="page-content">
+
+
+                <!-- PAGE HEADER -->
+
+                <div class="page-head">
+
+                    <div>
+
+                        <h1>
+                            My Parking Bookings
+                        </h1>
+
+                        <p>
+                            View and manage your parking reservations.
+                        </p>
+
+                    </div>
+
+
+                    <button class="primary-btn" type="button" onclick="window.location.href='parking-slots.html'">
+
+                        + New Booking
+
+                    </button>
+
+                </div>
+
+
+                <!-- ================= STATISTICS ================= -->
+
+                <div class="stats">
+
+
+                    <div class="stat-card">
+
+                        <b id="totalBookings">
+                            0
+                        </b>
+
+                        <span>
+                            Total Bookings
+                        </span>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <b id="activeBookings">
+                            0
+                        </b>
+
+                        <span>
+                            Active Bookings
+                        </span>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <b id="completedBookings">
+                            0
+                        </b>
+
+                        <span>
+                            Completed
+                        </span>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <b id="cancelledBookings">
+                            0
+                        </b>
+
+                        <span>
+                            Cancelled
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= MESSAGE ================= -->
+
+                <div id="bookingMessage" class="message">
+                </div>
+
+
+                <!-- ================= BOOKING PANEL ================= -->
+
+                <div class="panel">
+
+
+                    <div style="
+                            display:flex;
+                            justify-content:space-between;
+                            align-items:center;
+                            gap:15px;
+                            margin-bottom:15px;
+                        ">
+
+                        <h3>
+                            Booking History
+                        </h3>
+
+
+                        <button class="outline-btn compact" type="button" onclick="loadBookings()">
+
+                            🔄 Refresh
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- ================= FILTERS ================= -->
+
+                    <div class="form-grid" style="margin-bottom:20px;">
+
+
+                        <div class="form-group">
+
+                            <label for="statusFilter">
+                                Status
+                            </label>
+
+
+                            <select id="statusFilter" onchange="renderBookings()">
+
+                                <option value="ALL">
+                                    All Bookings
+                                </option>
+
+                                <option value="PENDING">
+                                    Pending
+                                </option>
+
+                                <option value="BOOKED">
+                                    Booked
+                                </option>
+
+                                <option value="CONFIRMED">
+                                    Confirmed
+                                </option>
+
+                                <option value="ACTIVE">
+                                    Active
+                                </option>
+
+                                <option value="COMPLETED">
+                                    Completed
+                                </option>
+
+                                <option value="CANCELLED">
+                                    Cancelled
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="bookingSearch">
+                                Search
+                            </label>
+
+
+                            <input id="bookingSearch" type="text" placeholder="Search slot or vehicle..." oninput="renderBookings()">
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================= BOOKING LIST ================= -->
+
+                    <div id="bookingList">
+
+                        <div class="loading">
+
+                            <div class="spinner"></div>
+
+                            Loading bookings...
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- ================= BOOKING MODAL ================= -->
+
+    <div id="bookingModal" class="modal">
+
+
+        <div class="modal-content">
+
+
+            <div class="modal-header">
+
+                <h3>
+                    Booking Details
+                </h3>
+
+
+                <button class="modal-close" type="button" onclick="closeBookingModal()">
+
+                    ×
+
+                </button>
+
+            </div>
+
+
+            <div id="bookingDetails">
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script src="./js/config.js"></script>
+
+    <script src="./js/app.js"></script>
+
+    <!-- Load bookings.js ONLY ONCE -->
+    <script src="./js/bookings.js"></script>
+
+
+</body>
+
+</html>

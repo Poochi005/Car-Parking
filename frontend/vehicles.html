@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Vehicles - Smart Car Parking</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div id="app"></div>
+
+    <main class="page-content">
+
+        <!-- =====================================================
+             PAGE HEADER
+        ====================================================== -->
+
+        <div class="page-head">
+
+            <div>
+
+                <h1>
+                    My Vehicles
+                </h1>
+
+                <p class="muted">
+                    Add, update and remove registered vehicles
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             VEHICLE CONTENT
+        ====================================================== -->
+
+        <div class="two-col">
+
+
+            <!-- =================================================
+                 ADD VEHICLE
+            ================================================== -->
+
+            <section class="panel">
+
+                <h3>
+                    🚘 Add Vehicle
+                </h3>
+
+                <p class="muted">
+                    Register your vehicle for smart parking.
+                </p>
+
+
+                <form id="vehicleForm">
+
+                    <input id="vehicleNumber" type="text" placeholder="Vehicle Number" required>
+
+
+                    <input id="vehicleModel" type="text" placeholder="Vehicle Model" required>
+
+
+                    <input id="vehicleColor" type="text" placeholder="Vehicle Color" required>
+
+
+                    <input id="vehicleSize" type="text" placeholder="Size (Small / Medium / Large)" required>
+
+
+                    <input id="vehicleType" type="text" placeholder="Type (Car / SUV / Electric Car)" required>
+
+
+                    <button class="primary-btn" type="submit">
+                        ➕ Add Vehicle
+                    </button>
+
+                </form>
+
+
+                <div id="vehicleMsg" class="message">
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 REGISTERED VEHICLES
+            ================================================== -->
+
+            <section class="panel">
+
+                <h3>
+                    🚗 Registered Vehicles
+                </h3>
+
+                <p class="muted">
+                    Your registered vehicles
+                </p>
+
+
+                <div id="vehicleList">
+                </div>
+
+
+                <div id="vehicleListMessage" class="empty">
+                    Loading vehicles...
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <!-- config.js FIRST -->
+    <script src="js/config.js"></script>
+
+    <!-- app.js SECOND -->
+    <script src="js/app.js"></script>
+
+    <!-- vehicles.js THIRD -->
+    <script src="js/vehicles.js"></script>
+
+</body>
+
+</html>
