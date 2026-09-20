@@ -16,24 +16,19 @@
 
     <div class="layout">
 
-        <!-- =====================================================
+        <!-- =========================
          SIDEBAR
-    ====================================================== -->
+    ========================== -->
 
         <aside class="sidebar">
 
             <div class="side-brand">
-
                 <div class="side-logo">
                     <i class="fa-solid fa-square-parking"></i>
                 </div>
 
-                <span>
-                Smart Parking
-            </span>
-
+                <span>Smart Parking</span>
             </div>
-
 
             <nav class="nav">
 
@@ -57,6 +52,14 @@
                     <i class="fa-solid fa-credit-card"></i> &nbsp; Payments
                 </a>
 
+                <a href="products.html">
+                    <i class="fa-solid fa-box"></i> &nbsp; Products
+                </a>
+
+                <a href="orders.html">
+                    <i class="fa-solid fa-cart-shopping"></i> &nbsp; Orders
+                </a>
+
                 <a href="history.html">
                     <i class="fa-solid fa-clock-rotate-left"></i> &nbsp; History
                 </a>
@@ -70,7 +73,6 @@
                 </a>
 
             </nav>
-
 
             <div class="side-bottom">
 
@@ -91,9 +93,9 @@
         </aside>
 
 
-        <!-- =====================================================
+        <!-- =========================
          TOP BAR
-    ====================================================== -->
+    ========================== -->
 
         <header class="topbar">
 
@@ -106,7 +108,6 @@
             </button>
 
             </div>
-
 
             <div class="top-user">
 
@@ -131,9 +132,9 @@
         </header>
 
 
-        <!-- =====================================================
+        <!-- =========================
          MAIN
-    ====================================================== -->
+    ========================== -->
 
         <main class="main">
 
@@ -156,7 +157,6 @@
 
                     </div>
 
-
                     <button class="danger-btn" type="button" onclick="adminLogout()">
 
                     <i class="fa-solid fa-right-from-bracket"></i>
@@ -167,18 +167,15 @@
                 </div>
 
 
-                <!-- =================================================
-                 STATISTICS
-            ================================================== -->
+                <!-- =========================
+                 MAIN STATISTICS
+            ========================== -->
 
                 <div class="stats">
 
-
                     <div class="stat-card">
 
-                        <b id="totalSlots">
-                        0
-                    </b>
+                        <b id="totalSlots">0</b>
 
                         <span>
                         Total Parking Slots
@@ -189,9 +186,7 @@
 
                     <div class="stat-card">
 
-                        <b id="availableSlots">
-                        0
-                    </b>
+                        <b id="availableSlots">0</b>
 
                         <span>
                         Available Slots
@@ -202,9 +197,7 @@
 
                     <div class="stat-card">
 
-                        <b id="occupiedSlots">
-                        0
-                    </b>
+                        <b id="occupiedSlots">0</b>
 
                         <span>
                         Occupied Slots
@@ -215,9 +208,7 @@
 
                     <div class="stat-card">
 
-                        <b id="totalVehicles">
-                        0
-                    </b>
+                        <b id="totalVehicles">0</b>
 
                         <span>
                         Registered Vehicles
@@ -228,18 +219,15 @@
                 </div>
 
 
-                <!-- =================================================
-                 SECOND ROW
-            ================================================== -->
+                <!-- =========================
+                 SECOND STATISTICS
+            ========================== -->
 
                 <div class="stats mini">
 
-
                     <div class="stat-card">
 
-                        <b id="totalBookings">
-                        0
-                    </b>
+                        <b id="totalBookings">0</b>
 
                         <span>
                         Total Bookings
@@ -250,12 +238,21 @@
 
                     <div class="stat-card">
 
-                        <b id="totalPayments">
-                        0
-                    </b>
+                        <b id="totalPayments">0</b>
 
                         <span>
                         Total Payments
+                    </span>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <b id="totalOrders">0</b>
+
+                        <span>
+                        Total Orders
                     </span>
 
                     </div>
@@ -276,12 +273,14 @@
                 </div>
 
 
-                <!-- =================================================
-                 PARKING STATUS
-            ================================================== -->
+                <!-- =========================
+                 PARKING + BOOKINGS
+            ========================== -->
 
                 <div class="two-col">
 
+
+                    <!-- PARKING STATUS -->
 
                     <section class="panel">
 
@@ -329,9 +328,9 @@
                 </div>
 
 
-                <!-- =================================================
+                <!-- =========================
                  SYSTEM STATUS
-            ================================================== -->
+            ========================== -->
 
                 <section class="panel">
 
@@ -351,7 +350,9 @@
                         </strong>
 
                             <p class="muted" id="backendStatus">
+
                                 Checking...
+
                             </p>
 
                         </div>
@@ -399,21 +400,21 @@
                 </section>
 
 
-                <!-- =================================================
-                 QUICK ACTIONS
-            ================================================== -->
+                <!-- =========================
+                 ADMIN MANAGEMENT
+            ========================== -->
 
                 <section class="panel">
 
                     <h3>
-                        Quick Actions
+                        <i class="fa-solid fa-screwdriver-wrench"></i> Admin Management
                     </h3>
 
 
                     <div class="form-grid">
 
 
-                        <button class="primary-btn" type="button" onclick="window.location.href='parking-slots.html'">
+                        <button class="primary-btn" type="button" onclick="goTo('parking-slots.html')">
 
                         <i class="fa-solid fa-square-parking"></i>
 
@@ -422,7 +423,7 @@
                     </button>
 
 
-                        <button class="primary-btn" type="button" onclick="window.location.href='vehicles.html'">
+                        <button class="primary-btn" type="button" onclick="goTo('vehicles.html')">
 
                         <i class="fa-solid fa-car"></i>
 
@@ -431,7 +432,7 @@
                     </button>
 
 
-                        <button class="primary-btn" type="button" onclick="window.location.href='bookings.html'">
+                        <button class="primary-btn" type="button" onclick="goTo('bookings.html')">
 
                         <i class="fa-solid fa-calendar-check"></i>
 
@@ -440,13 +441,32 @@
                     </button>
 
 
-                        <button class="success-btn" type="button" onclick="window.location.href='payments.html'">
+                        <button class="primary-btn" type="button" onclick="goTo('payments.html')">
 
-                        <i class="fa-solid fa-chart-line"></i>
+                        <i class="fa-solid fa-credit-card"></i>
 
-                        Revenue & Payments
+                        Manage Payments
 
                     </button>
+
+
+                        <button class="primary-btn" type="button" onclick="goTo('products.html')">
+
+                        <i class="fa-solid fa-box"></i>
+
+                        Manage Products
+
+                    </button>
+
+
+                        <button class="success-btn" type="button" onclick="goTo('orders.html')">
+
+                        <i class="fa-solid fa-cart-shopping"></i>
+
+                        Manage Orders
+
+                    </button>
+
 
                     </div>
 
@@ -460,29 +480,24 @@
     </div>
 
 
-    <!-- =====================================================
-     JAVASCRIPT
-====================================================== -->
+    <!-- =========================
+     CONFIG
+========================== -->
 
     <script src="js/config.js"></script>
 
-    <script src="js/admin.js"></script>
-
 
     <script>
-        document.addEventListener(
-            "DOMContentLoaded",
-            function() {
+        document.addEventListener("DOMContentLoaded", function() {
 
-                loadAdminDashboard();
+            loadAdminDashboard();
 
-            }
-        );
+        });
 
 
-        /* =====================================================
-           LOAD DASHBOARD
-        ===================================================== */
+        /* =========================
+           DASHBOARD
+        ========================= */
 
         async function loadAdminDashboard() {
 
@@ -498,23 +513,20 @@
 
                 await loadPaymentStats();
 
-                document.getElementById(
-                        "backendStatus"
-                    ).textContent =
-                    "Backend API connected";
+                await loadOrderStats();
 
+                document.getElementById("backendStatus").textContent =
+                    "Backend API connected";
 
             } catch (error) {
 
                 console.error(
-                    "Dashboard loading error:",
+                    "Admin Dashboard Error:",
                     error
                 );
 
                 const status =
-                    document.getElementById(
-                        "backendStatus"
-                    );
+                    document.getElementById("backendStatus");
 
                 if (status) {
 
@@ -528,9 +540,9 @@
         }
 
 
-        /* =====================================================
+        /* =========================
            ADMIN USER
-        ===================================================== */
+        ========================= */
 
         function loadAdminUser() {
 
@@ -566,24 +578,48 @@
         }
 
 
-        /* =====================================================
+        /* =========================
+           API FETCH
+        ========================= */
+
+        async function adminFetch(url) {
+
+            const response =
+                await fetch(url);
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "HTTP " + response.status
+                );
+
+            }
+
+
+            return await response.json();
+
+        }
+
+
+        /* =========================
            PARKING STATS
-        ===================================================== */
+        ========================= */
 
         async function loadParkingStats() {
 
             try {
 
                 const data =
-                    await apiGet(
-                        API.parkingSlots.all
+                    await adminFetch(
+                        API.parkingSlots
                     );
 
 
                 const slots =
                     Array.isArray(data) ?
                     data :
-                    data.content || [];
+                    (data.content || []);
 
 
                 const total =
@@ -611,31 +647,35 @@
 
 
                 document.getElementById(
-                    "totalSlots"
-                ).textContent = total;
+                        "totalSlots"
+                    ).textContent =
+                    total;
 
 
                 document.getElementById(
-                    "availableSlots"
-                ).textContent = available;
+                        "availableSlots"
+                    ).textContent =
+                    available;
 
 
                 document.getElementById(
-                    "occupiedSlots"
-                ).textContent = occupied;
+                        "occupiedSlots"
+                    ).textContent =
+                    occupied;
 
 
                 renderParkingStatus(
-                    slots
+                    available,
+                    occupied
                 );
-
 
             } catch (error) {
 
                 console.error(
-                    "Parking API error:",
+                    "Parking API Error:",
                     error
                 );
+
 
                 document.getElementById(
                         "parkingStatus"
@@ -647,46 +687,19 @@
         }
 
 
-        /* =====================================================
-           PARKING STATUS UI
-        ===================================================== */
+        /* =========================
+           PARKING STATUS
+        ========================= */
 
-        function renderParkingStatus(slots) {
+        function renderParkingStatus(
+            available,
+            occupied
+        ) {
 
             const container =
                 document.getElementById(
                     "parkingStatus"
                 );
-
-
-            if (!slots.length) {
-
-                container.innerHTML =
-                    '<div class="empty">No parking slots found</div>';
-
-                return;
-
-            }
-
-
-            const available =
-                slots.filter(
-                    slot =>
-                    String(
-                        slot.status || ""
-                    ).toUpperCase() ===
-                    "AVAILABLE"
-                ).length;
-
-
-            const occupied =
-                slots.filter(
-                    slot =>
-                    String(
-                        slot.status || ""
-                    ).toUpperCase() ===
-                    "OCCUPIED"
-                ).length;
 
 
             container.innerHTML = `
@@ -725,24 +738,24 @@
         }
 
 
-        /* =====================================================
+        /* =========================
            VEHICLE STATS
-        ===================================================== */
+        ========================= */
 
         async function loadVehicleStats() {
 
             try {
 
                 const data =
-                    await apiGet(
-                        API.vehicles.all
+                    await adminFetch(
+                        API.vehicles
                     );
 
 
                 const vehicles =
                     Array.isArray(data) ?
                     data :
-                    data.content || [];
+                    (data.content || []);
 
 
                 document.getElementById(
@@ -750,41 +763,42 @@
                     ).textContent =
                     vehicles.length;
 
-
             } catch (error) {
 
                 console.error(
-                    "Vehicle API error:",
+                    "Vehicle API Error:",
                     error
                 );
 
+
                 document.getElementById(
-                    "totalVehicles"
-                ).textContent = "0";
+                        "totalVehicles"
+                    ).textContent =
+                    "0";
 
             }
 
         }
 
 
-        /* =====================================================
+        /* =========================
            BOOKING STATS
-        ===================================================== */
+        ========================= */
 
         async function loadBookingStats() {
 
             try {
 
                 const data =
-                    await apiGet(
-                        API.bookings.all
+                    await adminFetch(
+                        API.bookings
                     );
 
 
                 const bookings =
                     Array.isArray(data) ?
                     data :
-                    data.content || [];
+                    (data.content || []);
 
 
                 document.getElementById(
@@ -797,17 +811,18 @@
                     bookings
                 );
 
-
             } catch (error) {
 
                 console.error(
-                    "Booking API error:",
+                    "Booking API Error:",
                     error
                 );
 
+
                 document.getElementById(
-                    "totalBookings"
-                ).textContent = "0";
+                        "totalBookings"
+                    ).textContent =
+                    "0";
 
 
                 document.getElementById(
@@ -820,11 +835,13 @@
         }
 
 
-        /* =====================================================
+        /* =========================
            RECENT BOOKINGS
-        ===================================================== */
+        ========================= */
 
-        function renderRecentBookings(bookings) {
+        function renderRecentBookings(
+            bookings
+        ) {
 
             const container =
                 document.getElementById(
@@ -843,11 +860,14 @@
 
 
             const recent =
-                bookings.slice(-5).reverse();
+                bookings
+                .slice(-5)
+                .reverse();
 
 
             container.innerHTML =
-                recent.map(
+                recent
+                .map(
                     booking => `
 
                 <div class="booking-card">
@@ -869,41 +889,51 @@
                             )}
                         </p>
 
+                        <p>
+                            Amount:
+                            ₹${Number(
+                                booking.amount || 0
+                            ).toFixed(2)}
+                        </p>
+
                     </div>
 
                     <span class="badge blue">
+
                         ${escapeHtml(
                             booking.status ||
                             "BOOKED"
                         )}
+
                     </span>
 
                 </div>
 
-            `
-                ).join("");
+                `
+                )
+                .join("");
 
         }
 
 
-        /* =====================================================
+        /* =========================
            PAYMENT STATS
-        ===================================================== */
+        ========================= */
 
         async function loadPaymentStats() {
 
             try {
 
                 const data =
-                    await apiGet(
-                        API.payments.all
+                    await adminFetch(
+                        API.payments
                     );
 
 
                 const payments =
                     Array.isArray(data) ?
                     data :
-                    data.content || [];
+                    (data.content || []);
 
 
                 document.getElementById(
@@ -935,17 +965,18 @@
                         revenue
                     );
 
-
             } catch (error) {
 
                 console.error(
-                    "Payment API error:",
+                    "Payment API Error:",
                     error
                 );
 
+
                 document.getElementById(
-                    "totalPayments"
-                ).textContent = "0";
+                        "totalPayments"
+                    ).textContent =
+                    "0";
 
 
                 document.getElementById(
@@ -958,9 +989,64 @@
         }
 
 
-        /* =====================================================
+        /* =========================
+           ORDER STATS
+        ========================= */
+
+        async function loadOrderStats() {
+
+            try {
+
+                const data =
+                    await adminFetch(
+                        API.orders
+                    );
+
+
+                const orders =
+                    Array.isArray(data) ?
+                    data :
+                    (data.content || []);
+
+
+                document.getElementById(
+                        "totalOrders"
+                    ).textContent =
+                    orders.length;
+
+            } catch (error) {
+
+                console.error(
+                    "Order API Error:",
+                    error
+                );
+
+
+                document.getElementById(
+                        "totalOrders"
+                    ).textContent =
+                    "0";
+
+            }
+
+        }
+
+
+        /* =========================
+           NAVIGATION
+        ========================= */
+
+        function goTo(page) {
+
+            window.location.href =
+                page;
+
+        }
+
+
+        /* =========================
            SIDEBAR
-        ===================================================== */
+        ========================= */
 
         function toggleSidebar() {
 
@@ -981,9 +1067,9 @@
         }
 
 
-        /* =====================================================
-           ADMIN LOGOUT
-        ===================================================== */
+        /* =========================
+           LOGOUT
+        ========================= */
 
         function adminLogout() {
 
@@ -1006,6 +1092,55 @@
 
             window.location.href =
                 "admin.html";
+
+        }
+
+
+        /* =========================
+           CURRENCY
+        ========================= */
+
+        function formatCurrency(
+            amount
+        ) {
+
+            return "₹" +
+                Number(
+                    amount || 0
+                ).toFixed(2);
+
+        }
+
+
+        /* =========================
+           HTML SECURITY
+        ========================= */
+
+        function escapeHtml(value) {
+
+            return String(
+                    value || ""
+                )
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
 
         }
     </script>

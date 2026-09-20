@@ -14,15 +14,13 @@ const API_BASE = "http://localhost:8081/api";
 // ============================================================
 
 // IMPORTANT:
-// Replace the value below with your REAL Google Maps API Key.
+// Create a NEW Google Maps API key because the previous key
+// was exposed in chat.
 //
-// Example:
-// const GOOGLE_MAPS_API_KEY = "AIzaSyXXXXXXXXXXXXXXXXXXXXXXXX";
-//
-// DO NOT leave it as:
-// "YOUR_GOOGLE_MAPS_API_KEY"
+// Paste your NEW key between the quotes below.
 
-const GOOGLE_MAPS_API_KEY = "YOUR_GOOGLE_MAPS_API_KEY";
+const GOOGLE_MAPS_API_KEY =
+    "AIzaSyDsWLQSD8fjGZ9rBtH1luFybtRiEoPBckY";
 
 
 // ============================================================
@@ -38,8 +36,6 @@ const API = {
     parkingSlots: `${API_BASE}/parking-slots`,
 
     // Parking Booking API
-    // NOTE:
-    // Actual backend endpoint is /parking-bookings
     bookings: `${API_BASE}/parking-bookings`,
 
     // Payment API
@@ -65,20 +61,15 @@ const API = {
 
 const APP_CONFIG = {
 
-    // Application name
     appName: "Smart Car Parking",
 
-    // Backend server
     backendUrl: "http://localhost:8081",
 
-    // Frontend server
     frontendUrl: "http://127.0.0.1:5500/frontend",
 
-    // API base URL
     apiBase: API_BASE,
 
-    // Parking data refresh interval
-    // 5000 milliseconds = 5 seconds
+    // Refresh parking data every 5 seconds
     parkingRefreshInterval: 5000
 };
 
@@ -89,7 +80,6 @@ const APP_CONFIG = {
 
 async function apiRequest(url, options = {}) {
 
-    // Default request options
     const defaultOptions = {
 
         headers: {
@@ -98,7 +88,6 @@ async function apiRequest(url, options = {}) {
     };
 
 
-    // Merge default + custom options
     const requestOptions = {
 
         ...defaultOptions,
@@ -114,7 +103,6 @@ async function apiRequest(url, options = {}) {
     };
 
 
-    // Send request
     const response = await fetch(url, requestOptions);
 
 
@@ -155,7 +143,6 @@ async function apiRequest(url, options = {}) {
     const contentType = response.headers.get("content-type");
 
 
-    // JSON response
     if (
         contentType &&
         contentType.includes("application/json")
@@ -165,7 +152,6 @@ async function apiRequest(url, options = {}) {
     }
 
 
-    // Text response
     return await response.text();
 }
 
@@ -174,23 +160,14 @@ async function apiRequest(url, options = {}) {
 // EXPORT GLOBAL CONFIGURATION
 // ============================================================
 
-// Backend API
 window.API_BASE = API_BASE;
 
-
-// Google Maps API key
 window.GOOGLE_MAPS_API_KEY = GOOGLE_MAPS_API_KEY;
 
-
-// API endpoints
 window.API = API;
 
-
-// Application configuration
 window.APP_CONFIG = APP_CONFIG;
 
-
-// API helper
 window.apiRequest = apiRequest;
 
 
@@ -203,20 +180,54 @@ console.log("Smart Car Parking Configuration Loaded");
 console.log("========================================");
 
 console.log("Backend:", API_BASE);
-console.log("Frontend:", APP_CONFIG.frontendUrl);
-console.log("Parking API:", API.parkingSlots);
-console.log("Booking API:", API.bookings);
-console.log("Payment API:", API.payments);
-console.log("Product API:", API.products);
-console.log("Cart API:", API.cart);
-console.log("Order API:", API.orders);
 
-if (
-    GOOGLE_MAPS_API_KEY === "YOUR_GOOGLE_MAPS_API_KEY"
+console.log(
+    "Frontend:",
+    APP_CONFIG.frontendUrl
+);
+
+console.log(
+    "Parking API:",
+    API.parkingSlots
+);
+
+console.log(
+    "Booking API:",
+    API.bookings
+);
+
+console.log(
+    "Payment API:",
+    API.payments
+);
+
+console.log(
+    "Product API:",
+    API.products
+);
+
+console.log(
+    "Cart API:",
+    API.cart
+);
+
+console.log(
+    "Order API:",
+    API.orders
+);
+
+
+// ============================================================
+// GOOGLE MAPS API KEY CHECK
+// ============================================================
+
+if (!GOOGLE_MAPS_API_KEY ||
+    GOOGLE_MAPS_API_KEY ===
+    "AIzaSyDsWLQSD8fjGZ9rBtH1luFybtRiEoPBckY"
 ) {
 
-    console.warn(
-        "⚠️ Google Maps API key is not configured."
+    console.error(
+        "❌ Google Maps API key is missing."
     );
 
 } else {

@@ -1,186 +1,638 @@
 /* ============================================================
    VEHICLES JS
    Smart Car Parking
+   Screenshot Style UI
+   Functionality Preserved
    ============================================================ */
 
 document.addEventListener("DOMContentLoaded", function() {
 
-    const vehicleForm = document.getElementById("vehicleForm");
-    const vehicleList = document.getElementById("vehicleList");
-    const vehicleMsg = document.getElementById("vehicleMsg");
-    const vehicleListMessage = document.getElementById("vehicleListMessage");
+    /* =========================================================
+       ELEMENTS
+    ========================================================= */
 
-    const vehicleNumber = document.getElementById("vehicleNumber");
-    const vehicleModel = document.getElementById("vehicleModel");
-    const vehicleColor = document.getElementById("vehicleColor");
-    const vehicleSize = document.getElementById("vehicleSize");
-    const vehicleType = document.getElementById("vehicleType");
+    const vehicleForm =
+        document.getElementById("vehicleForm");
+
+    const vehicleList =
+        document.getElementById("vehicleList");
+
+    const vehicleMsg =
+        document.getElementById("vehicleMsg");
+
+    const vehicleListMessage =
+        document.getElementById("vehicleListMessage");
+
+    const vehicleNumber =
+        document.getElementById("vehicleNumber");
+
+    const vehicleModel =
+        document.getElementById("vehicleModel");
+
+    const vehicleColor =
+        document.getElementById("vehicleColor");
+
+    const vehicleSize =
+        document.getElementById("vehicleSize");
+
+    const vehicleType =
+        document.getElementById("vehicleType");
+
+    const vehicleTotalCount =
+        document.getElementById("vehicleTotalCount");
+
+    const vehicleCountBadge =
+        document.getElementById("vehicleCountBadge");
 
 
     /* =========================================================
        GET LOGGED-IN USER
-       ========================================================= */
+    ========================================================= */
 
     function getCurrentUser() {
 
-        const savedUser = localStorage.getItem("loggedInUser");
+        const savedUser =
+            localStorage.getItem("loggedInUser");
 
         if (!savedUser) {
             return null;
         }
 
         try {
+
             return JSON.parse(savedUser);
+
         } catch (error) {
-            console.error("Invalid user data:", error);
+
+            console.error(
+                "Invalid logged-in user:",
+                error
+            );
+
             return null;
         }
     }
 
 
-    const currentUser = getCurrentUser();
+    const currentUser =
+        getCurrentUser();
 
 
     /* =========================================================
        LOGIN CHECK
-       ========================================================= */
+    ========================================================= */
 
     if (!currentUser) {
 
-        window.location.href = "login.html";
-        return;
+        window.location.href =
+            "login.html";
 
+        return;
     }
 
 
-    console.log("Current user:", currentUser);
+    console.log(
+        "Current logged-in user:",
+        currentUser
+    );
+
+
+    /* =========================================================
+       GET API URL
+    ========================================================= */
+
+    function getVehicleAPI() {
+
+        if (
+            window.API &&
+            window.API.vehicles
+        ) {
+
+            return window.API.vehicles;
+
+        }
+
+        if (window.API_BASE) {
+
+            return window.API_BASE + "/vehicles";
+
+        }
+
+        return "http://localhost:8081/api/vehicles";
+    }
 
 
     /* =========================================================
        LOAD VEHICLES
-       ========================================================= */
+    ========================================================= */
 
     async function loadVehicles() {
 
         try {
 
-            vehicleListMessage.style.display = "block";
-            vehicleListMessage.textContent = "Loading vehicles...";
+            /* -------------------------------------------------
+               SHOW LOADING
+            ------------------------------------------------- */
 
-            vehicleList.innerHTML = "";
+            if (vehicleListMessage) {
+
+                vehicleListMessage.style.display =
+                    "block";
+
+                vehicleListMessage.innerHTML = `
+                    <div class="vehicle-loading-box">
+
+                        <div class="vehicle-loading-spinner"></div>
+
+                        <div>
+                            Loading vehicles...
+                        </div>
+
+                    </div>
+                `;
+            }
 
 
-            console.log("Vehicle API:", window.API.vehicles);
+            if (vehicleList) {
+
+                vehicleList.innerHTML = "";
+
+            }
 
 
-            const response = await fetch(window.API.vehicles);
+            const apiURL =
+                getVehicleAPI();
+
+
+            console.log(
+                "Vehicle API:",
+                apiURL
+            );
+
+
+            /* -------------------------------------------------
+               API REQUEST
+            ------------------------------------------------- */
+
+            const response =
+                await fetch(apiURL);
 
 
             if (!response.ok) {
 
                 throw new Error(
-                    "Vehicle API Error: " + response.status
+                    "Vehicle API Error: HTTP " +
+                    response.status
                 );
 
             }
 
 
-            const vehicles = await response.json();
+            const result =
+                await response.json();
 
 
-            console.log("All vehicles:", vehicles);
-
-
-            const myVehicles = vehicles.filter(function(vehicle) {
-
-                return Number(vehicle.userId) ===
-                    Number(currentUser.id);
-
-            });
-
-
-            console.log("My vehicles:", myVehicles);
-
-
-            vehicleListMessage.style.display = "none";
+            console.log(
+                "All vehicles:",
+                result
+            );
 
 
             /* =================================================
-               NO VEHICLES
-               ================================================= */
+               HANDLE API RESPONSE
+            ================================================= */
 
-            if (myVehicles.length === 0) {
+            let vehicles = [];
 
-                vehicleListMessage.style.display = "block";
 
-                vehicleListMessage.textContent =
-                    "No vehicles registered for this account.";
+            if (Array.isArray(result)) {
 
-                return;
+                vehicles = result;
+
+            } else if (
+                result &&
+                Array.isArray(result.content)
+            ) {
+
+                vehicles =
+                    result.content;
+
+            } else if (
+                result &&
+                Array.isArray(result.data)
+            ) {
+
+                vehicles =
+                    result.data;
+
+            }
+
+
+            console.log(
+                "Vehicle count:",
+                vehicles.length
+            );
+
+
+            /* =================================================
+               FILTER CURRENT USER VEHICLES
+            ================================================= */
+
+            const myVehicles =
+                vehicles.filter(function(vehicle) {
+
+                    return Number(
+                        vehicle.userId
+                    ) === Number(
+                        currentUser.id
+                    );
+
+                });
+
+
+            console.log(
+                "My vehicles:",
+                myVehicles
+            );
+
+
+            /* =================================================
+               UPDATE COUNT
+            ================================================= */
+
+            updateVehicleCount(
+                myVehicles.length
+            );
+
+
+            /* -------------------------------------------------
+               HIDE LOADING
+            ------------------------------------------------- */
+
+            if (vehicleListMessage) {
+
+                vehicleListMessage.style.display =
+                    "none";
 
             }
 
 
             /* =================================================
-               DISPLAY VEHICLES
-               ================================================= */
+               NO VEHICLES
+            ================================================= */
 
-            vehicleList.innerHTML = myVehicles.map(function(vehicle) {
+            if (myVehicles.length === 0) {
 
-                return `
+                if (vehicleListMessage) {
 
-                    <div class="vehicle-card">
+                    vehicleListMessage.style.display =
+                        "block";
 
-                        <div>
+                    vehicleListMessage.innerHTML = `
 
-                            <strong>
-                                🚘 ${escapeHTML(vehicle.vehicleNumber)}
-                            </strong>
+                        <div class="vehicle-empty-state">
 
-                            <div class="muted">
+                            <div class="vehicle-empty-icon">
 
-                                ${escapeHTML(vehicle.vehicleModel || "-")}
-
-                                • ${escapeHTML(vehicle.vehicleType || "-")}
-
-                                • ${escapeHTML(vehicle.vehicleColor || "-")}
+                                <i class="fa-solid fa-car"></i>
 
                             </div>
 
-                            <small>
+                            <div class="vehicle-empty-title">
 
-                                Size:
-                                ${escapeHTML(vehicle.vehicleSize || "-")}
+                                No vehicles registered
 
-                            </small>
+                            </div>
+
+                            <div class="vehicle-empty-text">
+
+                                Add your vehicle to use
+                                smart parking recommendations.
+
+                            </div>
 
                         </div>
 
+                    `;
 
-                        <button
-                            class="danger"
-                            onclick="deleteVehicle(${vehicle.id})">
+                }
 
-                            Delete
+                return;
+            }
 
-                        </button>
+
+            /* =================================================
+               DISPLAY VEHICLES
+            ================================================= */
+
+            if (vehicleList) {
+
+                vehicleList.innerHTML =
+                    myVehicles.map(
+                        function(vehicle) {
+
+                            return createVehicleCard(
+                                vehicle
+                            );
+
+                        }
+                    ).join("");
+
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "Load vehicles error:",
+                error
+            );
+
+
+            updateVehicleCount(0);
+
+
+            if (vehicleList) {
+
+                vehicleList.innerHTML =
+                    "";
+
+            }
+
+
+            if (vehicleListMessage) {
+
+                vehicleListMessage.style.display =
+                    "block";
+
+                vehicleListMessage.innerHTML = `
+
+                    <div class="vehicle-error-state">
+
+                        <div class="vehicle-error-icon">
+
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+
+                        </div>
+
+                        <div class="vehicle-error-title">
+
+                            Unable to load vehicles
+
+                        </div>
+
+                        <div class="vehicle-error-text">
+
+                            Check Spring Boot server.
+
+                        </div>
 
                     </div>
 
                 `;
 
-            }).join("");
+            }
+
+        }
+
+    }
 
 
-        } catch (error) {
+    /* =========================================================
+       CREATE VEHICLE CARD
+       SCREENSHOT STYLE
+    ========================================================= */
 
-            console.error("Load vehicles error:", error);
+    function createVehicleCard(vehicle) {
+
+        const id =
+            Number(vehicle.id);
 
 
-            vehicleListMessage.style.display = "block";
+        const number =
+            escapeHTML(
+                vehicle.vehicleNumber ||
+                "-"
+            );
 
-            vehicleListMessage.textContent =
-                "Unable to load vehicles. Check Spring Boot.";
+
+        const model =
+            escapeHTML(
+                vehicle.vehicleModel ||
+                "-"
+            );
+
+
+        const type =
+            escapeHTML(
+                vehicle.vehicleType ||
+                "-"
+            );
+
+
+        const color =
+            escapeHTML(
+                vehicle.vehicleColor ||
+                "-"
+            );
+
+
+        const size =
+            escapeHTML(
+                vehicle.vehicleSize ||
+                "-"
+            );
+
+
+        const status =
+            escapeHTML(
+                vehicle.status ||
+                "ACTIVE"
+            );
+
+
+        /* -----------------------------------------------------
+           VEHICLE ICON
+        ----------------------------------------------------- */
+
+        let vehicleIcon =
+            "fa-car";
+
+
+        if (
+            type.toLowerCase().includes("suv")
+        ) {
+
+            vehicleIcon =
+                "fa-car-side";
+
+        } else if (
+            type.toLowerCase().includes("electric")
+        ) {
+
+            vehicleIcon =
+                "fa-bolt";
+
+        }
+
+
+        /* -----------------------------------------------------
+           RETURN CARD
+        ----------------------------------------------------- */
+
+        return `
+
+            <div class="vehicle-card">
+
+                <!-- LEFT CONTENT -->
+
+                <div class="vehicle-card-main">
+
+                    <div class="vehicle-card-title">
+
+                        <div class="vehicle-card-icon">
+
+                            <i class="fa-solid ${vehicleIcon}"></i>
+
+                        </div>
+
+                        <div>
+
+                            <div class="vehicle-number">
+
+                                ${number}
+
+                            </div>
+
+                            <div class="vehicle-model">
+
+                                ${model}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- VEHICLE DETAILS -->
+
+                    <div class="vehicle-details">
+
+                        <div class="vehicle-detail-item">
+
+                            <span class="vehicle-detail-label">
+
+                                Type
+
+                            </span>
+
+                            <strong>
+
+                                ${type}
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="vehicle-detail-item">
+
+                            <span class="vehicle-detail-label">
+
+                                Color
+
+                            </span>
+
+                            <strong>
+
+                                ${color}
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="vehicle-detail-item">
+
+                            <span class="vehicle-detail-label">
+
+                                Size
+
+                            </span>
+
+                            <strong>
+
+                                ${size}
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RIGHT CONTENT -->
+
+                <div class="vehicle-card-actions">
+
+                    <!-- ACTIVE -->
+
+                    <span class="vehicle-status">
+
+                        <span class="vehicle-status-dot"></span>
+
+                        ${status}
+
+                    </span>
+
+
+                    <!-- DELETE -->
+
+                    <button
+                        type="button"
+                        class="vehicle-delete-btn"
+                        onclick="deleteVehicle(${id})">
+
+                        <i class="fa-solid fa-trash"></i>
+
+                        Delete
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+    }
+
+
+    /* =========================================================
+       UPDATE VEHICLE COUNT
+    ========================================================= */
+
+    function updateVehicleCount(count) {
+
+        if (vehicleTotalCount) {
+
+            vehicleTotalCount.textContent =
+                count;
+
+        }
+
+
+        if (vehicleCountBadge) {
+
+            vehicleCountBadge.textContent =
+                count +
+                (
+                    count === 1 ?
+                    " Vehicle" :
+                    " Vehicles"
+                );
 
         }
 
@@ -189,106 +641,270 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /* =========================================================
        ADD VEHICLE
-       ========================================================= */
+       FUNCTIONALITY PRESERVED
+    ========================================================= */
 
     if (vehicleForm) {
 
-        vehicleForm.addEventListener("submit", async function(event) {
+        vehicleForm.addEventListener(
+            "submit",
+            async function(event) {
 
-            event.preventDefault();
-
-
-            const data = {
-
-                userId: Number(currentUser.id),
-
-                vehicleNumber: vehicleNumber.value.trim(),
-
-                vehicleModel: vehicleModel.value.trim(),
-
-                vehicleColor: vehicleColor.value.trim(),
-
-                vehicleSize: vehicleSize.value.trim(),
-
-                vehicleType: vehicleType.value.trim(),
-
-                status: "ACTIVE"
-
-            };
+                event.preventDefault();
 
 
-            console.log("Vehicle data:", data);
+                /* -------------------------------------------------
+                   GET VALUES
+                ------------------------------------------------- */
+
+                const data = {
+
+                    userId: Number(
+                        currentUser.id
+                    ),
+
+                    vehicleNumber: vehicleNumber.value
+                        .trim()
+                        .toUpperCase(),
+
+                    vehicleModel: vehicleModel.value
+                        .trim(),
+
+                    vehicleColor: vehicleColor.value
+                        .trim(),
+
+                    vehicleSize: vehicleSize.value
+                        .trim(),
+
+                    vehicleType: vehicleType.value
+                        .trim(),
+
+                    status: "ACTIVE"
+
+                };
 
 
-            if (!data.vehicleNumber ||
-                !data.vehicleModel ||
-                !data.vehicleColor ||
-                !data.vehicleSize ||
-                !data.vehicleType
-            ) {
-
-                showMessage(
-                    "Please fill all vehicle details.",
-                    false
+                console.log(
+                    "Vehicle data:",
+                    data
                 );
 
-                return;
 
+                /* =================================================
+                   VALIDATION
+                ================================================= */
+
+                if (!data.vehicleNumber ||
+                    !data.vehicleModel ||
+                    !data.vehicleColor ||
+                    !data.vehicleSize ||
+                    !data.vehicleType
+                ) {
+
+                    showMessage(
+                        "Please fill all vehicle details.",
+                        false
+                    );
+
+                    return;
+                }
+
+
+                try {
+
+                    showMessage(
+                        "Adding vehicle...",
+                        true
+                    );
+
+
+                    const apiURL =
+                        getVehicleAPI();
+
+
+                    /* =================================================
+                       POST REQUEST
+                    ================================================= */
+
+                    const response =
+                        await fetch(
+                            apiURL, {
+
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+
+                                body: JSON.stringify(
+                                    data
+                                )
+
+                            }
+                        );
+
+
+                    const result =
+                        await response
+                        .json()
+                        .catch(
+                            function() {
+                                return {};
+                            }
+                        );
+
+
+                    console.log(
+                        "Add vehicle response:",
+                        result
+                    );
+
+
+                    /* =================================================
+                       API ERROR
+                    ================================================= */
+
+                    if (!response.ok) {
+
+                        throw new Error(
+
+                            result.message ||
+                            result.error ||
+                            "Vehicle could not be added."
+
+                        );
+
+                    }
+
+
+                    /* =================================================
+                       SUCCESS
+                    ================================================= */
+
+                    showMessage(
+                        "Vehicle added successfully! ✅",
+                        true
+                    );
+
+
+                    /* -------------------------------------------------
+                       CLEAR FORM
+                    ------------------------------------------------- */
+
+                    vehicleForm.reset();
+
+
+                    /* -------------------------------------------------
+                       RELOAD VEHICLES
+                    ------------------------------------------------- */
+
+                    await loadVehicles();
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Add vehicle error:",
+                        error
+                    );
+
+
+                    showMessage(
+                        "Could not add vehicle. Check vehicle number/API.",
+                        false
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =========================================================
+       DELETE VEHICLE
+       FUNCTIONALITY PRESERVED
+    ========================================================= */
+
+    window.deleteVehicle =
+        async function(id) {
+
+            if (!id) {
+                return;
+            }
+
+
+            const confirmed =
+                confirm(
+                    "Delete this vehicle?"
+                );
+
+
+            if (!confirmed) {
+                return;
             }
 
 
             try {
 
-                showMessage(
-                    "Adding vehicle...",
-                    true
-                );
+                const apiURL =
+                    getVehicleAPI();
 
 
-                const response = await fetch(
-                    window.API.vehicles, {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-
-                        body: JSON.stringify(data)
-                    }
-                );
-
-
-                const result =
-                    await response.json().catch(function() {
-                        return {};
-                    });
-
-
-                console.log(
-                    "Add vehicle response:",
-                    result
-                );
+                const response =
+                    await fetch(
+                        apiURL + "/" + id, {
+                            method: "DELETE"
+                        }
+                    );
 
 
                 if (!response.ok) {
 
+                    let errorMessage =
+                        "Delete failed.";
+
+
+                    try {
+
+                        const result =
+                            await response.json();
+
+
+                        errorMessage =
+                            result.message ||
+                            result.error ||
+                            errorMessage;
+
+
+                    } catch (e) {
+
+                        // Ignore JSON error
+
+                    }
+
+
                     throw new Error(
-                        result.message ||
-                        result.error ||
-                        "Vehicle could not be added."
+                        errorMessage
                     );
 
                 }
 
 
+                /* -------------------------------------------------
+                   SUCCESS
+                ------------------------------------------------- */
+
                 showMessage(
-                    "Vehicle added successfully! ✅",
+                    "Vehicle deleted successfully! ✅",
                     true
                 );
 
 
-                vehicleForm.reset();
-
+                /* -------------------------------------------------
+                   RELOAD
+                ------------------------------------------------- */
 
                 await loadVehicles();
 
@@ -296,128 +912,118 @@ document.addEventListener("DOMContentLoaded", function() {
             } catch (error) {
 
                 console.error(
-                    "Add vehicle error:",
+                    "Delete vehicle error:",
                     error
                 );
 
 
                 showMessage(
-                    "Could not add vehicle. Check vehicle number/API.",
+                    "Delete failed. Please try again.",
                     false
                 );
 
             }
 
-        });
-
-    }
+        };
 
 
     /* =========================================================
-       DELETE VEHICLE
-       ========================================================= */
+       SHOW MESSAGE
+    ========================================================= */
 
-    window.deleteVehicle = async function(id) {
-
-        if (!id) {
-            return;
-        }
-
-
-        const confirmed =
-            confirm("Delete this vehicle?");
-
-
-        if (!confirmed) {
-            return;
-        }
-
-
-        try {
-
-            const response = await fetch(
-                window.API.vehicles + "/" + id, {
-                    method: "DELETE"
-                }
-            );
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Delete failed: " +
-                    response.status
-                );
-
-            }
-
-
-            showMessage(
-                "Vehicle deleted successfully! ✅",
-                true
-            );
-
-
-            await loadVehicles();
-
-
-        } catch (error) {
-
-            console.error(
-                "Delete vehicle error:",
-                error
-            );
-
-
-            showMessage(
-                "Delete failed. Please try again.",
-                false
-            );
-
-        }
-
-    };
-
-
-    /* =========================================================
-       MESSAGE
-       ========================================================= */
-
-    function showMessage(message, success) {
+    function showMessage(
+        message,
+        success
+    ) {
 
         if (!vehicleMsg) {
             return;
         }
 
 
-        vehicleMsg.textContent = message;
+        vehicleMsg.textContent =
+            message;
 
 
-        vehicleMsg.style.color =
-            success ? "#198944" : "#d12f3c";
+        vehicleMsg.style.padding =
+            "9px 12px";
+
+
+        vehicleMsg.style.borderRadius =
+            "8px";
+
+
+        vehicleMsg.style.fontSize =
+            "12px";
+
+
+        vehicleMsg.style.fontWeight =
+            "600";
+
+
+        if (success) {
+
+            vehicleMsg.style.color =
+                "#15803d";
+
+            vehicleMsg.style.background =
+                "#ecfdf5";
+
+            vehicleMsg.style.border =
+                "1px solid #bbf7d0";
+
+        } else {
+
+            vehicleMsg.style.color =
+                "#dc2626";
+
+            vehicleMsg.style.background =
+                "#fef2f2";
+
+            vehicleMsg.style.border =
+                "1px solid #fecaca";
+
+        }
 
     }
 
 
     /* =========================================================
        HTML SECURITY
-       ========================================================= */
+    ========================================================= */
 
     function escapeHTML(value) {
 
-        return String(value || "")
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-            .replaceAll("'", "&#039;");
+        return String(
+                value ? value : ""
+            )
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+            .replace(
+                /</g,
+                "&lt;"
+            )
+            .replace(
+                />/g,
+                "&gt;"
+            )
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+            .replace(
+                /'/g,
+                "&#039;"
+            );
 
     }
 
 
     /* =========================================================
        START
-       ========================================================= */
+    ========================================================= */
 
     loadVehicles();
 

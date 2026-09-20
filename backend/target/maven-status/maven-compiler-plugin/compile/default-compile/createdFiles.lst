@@ -23,6 +23,8 @@ com\smartparking\repository\VehicleRepository.class
 com\smartparking\config\CorsConfig$1.class
 com\smartparking\entity\User.class
 com\smartparking\SmartParkingApplication.class
+com\smartparking\entity\OrderItem.class
+com\smartparking\repository\OrderItemRepository.class
 com\smartparking\controller\PaymentController.class
 com\smartparking\entity\ParkingBooking.class
 com\smartparking\repository\OrderRepository.class

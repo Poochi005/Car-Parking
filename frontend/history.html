@@ -2,31 +2,47 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Parking History - Smart Car Parking</title>
 
     <link rel="stylesheet" href="css/style.css">
 
+
     <style>
+        /* =====================================================
+           PAGE BACKGROUND
+        ===================================================== */
+        
         body {
             margin: 0;
             min-height: 100vh;
             background: radial-gradient( circle at top left, rgba(37, 99, 235, 0.35), transparent 35%), radial-gradient( circle at bottom right, rgba(6, 182, 212, 0.25), transparent 35%), linear-gradient( 135deg, #07111f 0%, #0f172a 45%, #12344a 100%);
             background-attachment: fixed;
         }
+        /* =====================================================
+           MAIN
+        ===================================================== */
         
         .main {
             min-height: 100vh;
             background: linear-gradient( 135deg, rgba(248, 250, 252, 0.97), rgba(239, 246, 255, 0.97));
         }
+        /* =====================================================
+           HISTORY CONTAINER
+        ===================================================== */
         
         .history-container {
             display: flex;
             flex-direction: column;
             gap: 18px;
         }
+        /* =====================================================
+           HISTORY CARD
+        ===================================================== */
         
         .history-card {
             background: #ffffff;
@@ -41,6 +57,9 @@
             transform: translateY(-3px);
             box-shadow: 0 15px 35px rgba(15, 23, 42, 0.14);
         }
+        /* =====================================================
+           TOP
+        ===================================================== */
         
         .history-top {
             display: flex;
@@ -62,6 +81,9 @@
             color: #64748b;
             font-size: 13px;
         }
+        /* =====================================================
+           GRID
+        ===================================================== */
         
         .history-grid {
             display: grid;
@@ -69,11 +91,15 @@
             gap: 14px;
             margin-top: 18px;
         }
+        /* =====================================================
+           INFO BOX
+        ===================================================== */
         
         .history-info {
             background: #f8fafc;
             border-radius: 12px;
             padding: 14px;
+            border: 1px solid #eef2f7;
         }
         
         .history-label {
@@ -88,11 +114,18 @@
             font-weight: 600;
             color: #0f172a;
         }
+        /* =====================================================
+           AMOUNT
+        ===================================================== */
         
         .amount {
             color: #15803d;
             font-size: 17px;
+            font-weight: 700;
         }
+        /* =====================================================
+           STATUS
+        ===================================================== */
         
         .status-badge {
             display: inline-block;
@@ -121,6 +154,9 @@
             background: #f1f5f9;
             color: #475569;
         }
+        /* =====================================================
+           EMPTY
+        ===================================================== */
         
         .history-empty {
             text-align: center;
@@ -132,12 +168,18 @@
             font-size: 48px;
             margin-bottom: 12px;
         }
+        /* =====================================================
+           LOADING
+        ===================================================== */
         
         .history-loading {
             text-align: center;
             padding: 40px;
             color: #64748b;
         }
+        /* =====================================================
+           ERROR
+        ===================================================== */
         
         .history-error {
             background: #fee2e2;
@@ -147,12 +189,33 @@
             margin-bottom: 15px;
             display: none;
         }
+        /* =====================================================
+           REFRESH BUTTON
+        ===================================================== */
         
         .refresh-btn {
             cursor: pointer;
         }
+        /* =====================================================
+           ACTIVE HISTORY CARD
+        ===================================================== */
         
-        @media (max-width: 900px) {
+        .history-card.active-booking {
+            border-left: 5px solid #16a34a;
+        }
+        /* =====================================================
+           ACTIVE TEXT
+        ===================================================== */
+        
+        .active-text {
+            color: #15803d;
+            font-weight: 700;
+        }
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+        
+        @media (max-width: 1000px) {
             .history-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -166,6 +229,9 @@
             .history-grid {
                 grid-template-columns: 1fr;
             }
+            .history-card {
+                padding: 16px;
+            }
         }
     </style>
 
@@ -174,146 +240,214 @@
 
 <body>
 
+
+    <!-- =====================================================
+         LAYOUT
+    ====================================================== -->
+
     <div class="layout">
 
 
-        <!-- =====================================================
-         SIDEBAR
-    ====================================================== -->
+        <!-- =================================================
+             SIDEBAR
+        ================================================== -->
 
         <aside class="sidebar">
+
+
+            <!-- BRAND -->
 
             <div class="side-brand">
 
                 <div class="side-logo">
+
                     🚗
+
                 </div>
 
+
                 <span>
-                Smart Parking
-            </span>
+
+                    Smart Parking
+
+                </span>
 
             </div>
 
 
+            <!-- NAVIGATION -->
+
             <nav class="nav">
 
                 <a href="dashboard.html">
-                🏠 Dashboard
-            </a>
+
+                    🏠 Dashboard
+
+                </a>
+
 
                 <a href="parking-slots.html">
-                🅿️ Parking Slots
-            </a>
+
+                    🅿️ Parking Slots
+
+                </a>
+
 
                 <a href="vehicles.html">
-                🚘 My Vehicles
-            </a>
+
+                    🚘 My Vehicles
+
+                </a>
+
 
                 <a href="bookings.html">
-                📅 My Bookings
-            </a>
+
+                    📅 My Bookings
+
+                </a>
+
 
                 <a href="history.html" class="active">
-                🕘 Parking History
-            </a>
+
+                    🕘 Parking History
+
+                </a>
+
 
                 <a href="map.html">
-                🗺️ Live Map
-            </a>
+
+                    🗺️ Live Map
+
+                </a>
+
 
                 <a href="products.html">
-                🛒 Products
-            </a>
+
+                    🛒 Products
+
+                </a>
+
 
                 <a href="cart.html">
-                🛍️ Cart
-            </a>
+
+                    🛍️ Cart
+
+                </a>
+
 
                 <a href="orders.html">
-                📦 Orders
-            </a>
+
+                    📦 Orders
+
+                </a>
 
             </nav>
 
+
+            <!-- AI STATUS -->
 
             <div class="side-bottom">
 
                 <div class="ai-status">
 
                     <strong>
-                    🤖 AI Parking
-                </strong>
+
+                        🤖 AI Parking
+
+                    </strong>
+
 
                     <p>
+
                         System Online
+
                     </p>
 
+
                     <small>
-                    Smart slot recommendation active
-                </small>
+
+                        Smart slot recommendation active
+
+                    </small>
 
                 </div>
 
             </div>
 
+
         </aside>
 
 
-
-        <!-- =====================================================
-         MAIN
-    ====================================================== -->
+        <!-- =================================================
+             MAIN
+        ================================================== -->
 
         <main class="main">
 
 
-            <!-- TOP BAR -->
+            <!-- =================================================
+                 TOP BAR
+            ================================================== -->
 
             <header class="topbar">
+
 
                 <div>
 
                     <strong>
-                    Smart Car Parking
-                </strong>
+
+                        Smart Car Parking
+
+                    </strong>
 
                 </div>
 
 
+                <!-- USER -->
+
                 <div class="top-user">
+
 
                     <div>
 
                         <strong id="userName">
-                        User
-                    </strong>
+
+                            User
+
+                        </strong>
+
 
                         <small id="userEmail" class="muted">
-                        user@example.com
-                    </small>
+
+                            user@example.com
+
+                        </small>
 
                     </div>
 
 
                     <div class="avatar" id="userAvatar">
+
                         U
+
                     </div>
 
 
                     <button class="outline-btn compact" onclick="logout()">
-                    Logout
-                </button>
+
+                        Logout
+
+                    </button>
 
                 </div>
+
 
             </header>
 
 
-
             <!-- =================================================
-             PAGE CONTENT
-        ================================================== -->
+                 PAGE CONTENT
+            ================================================== -->
 
             <section class="page-content">
 
@@ -322,98 +456,144 @@
 
                 <div class="page-head">
 
+
                     <div>
 
                         <h1>
+
                             🕘 Parking History
+
                         </h1>
 
+
                         <p class="muted">
+
                             View your previous parking bookings and payment details.
+
                         </p>
 
                     </div>
 
 
-                    <button class="primary-btn refresh-btn" onclick="loadHistory()">
-                    🔄 Refresh
-                </button>
+                    <button type="button" class="primary-btn refresh-btn" onclick="loadHistory()">
+
+                        🔄 Refresh
+
+                    </button>
 
                 </div>
 
 
-
-                <!-- ERROR -->
+                <!-- =================================================
+                     ERROR
+                ================================================== -->
 
                 <div id="historyError" class="history-error"></div>
 
 
-
-                <!-- HISTORY PANEL -->
+                <!-- =================================================
+                     HISTORY PANEL
+                ================================================== -->
 
                 <div class="panel">
 
+
                     <div class="history-container">
 
-                        <!-- LOADING -->
+
+                        <!-- =================================================
+                             LOADING
+                        ================================================== -->
 
                         <div id="historyLoading" class="history-loading">
+
                             ⏳ Loading parking history...
+
                         </div>
 
 
-                        <!-- EMPTY -->
+                        <!-- =================================================
+                             EMPTY
+                        ================================================== -->
 
                         <div id="historyEmpty" class="history-empty" style="display:none;">
 
+
                             <div class="history-empty-icon">
+
                                 🅿️
+
                             </div>
 
+
                             <h3>
+
                                 No Parking History
+
                             </h3>
 
+
                             <p>
+
                                 Your previous parking bookings will appear here.
+
                             </p>
 
+
                             <a href="parking-slots.html" class="primary-btn">
-                            Find Parking Slot
-                        </a>
+
+                                Find Parking Slot
+
+                            </a>
+
 
                         </div>
 
 
-                        <!-- HISTORY LIST -->
+                        <!-- =================================================
+                             HISTORY LIST
+                        ================================================== -->
 
-                        <div id="historyList"></div>
+                        <div id="historyList" class="history-list"></div>
+
 
                     </div>
 
                 </div>
 
 
-                <!-- PAGE MESSAGE -->
+                <!-- =================================================
+                     MESSAGE
+                ================================================== -->
 
                 <div id="historyMessage" class="message"></div>
 
 
             </section>
 
+
         </main>
+
 
     </div>
 
 
-
     <!-- =========================================================
-     JAVASCRIPT
-========================================================== -->
+         JAVASCRIPT
+    ========================================================== -->
+
+
+    <!-- CONFIG FIRST -->
 
     <script src="js/config.js"></script>
 
+
+    <!-- AUTH SECOND -->
+
     <script src="js/auth.js"></script>
+
+
+    <!-- HISTORY LAST -->
 
     <script src="js/history.js"></script>
 

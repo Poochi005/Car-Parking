@@ -1,0 +1,56 @@
+
+/* ============================================================
+   SMART PARKING - SHARED PREMIUM UI THEME
+   Matches Parking Slots reference design across all HTML pages
+   ============================================================ */
+:root{
+  --sp-blue:#2563eb;--sp-blue2:#3b82f6;--sp-navy:#0b1730;--sp-navy2:#101f3b;
+  --sp-bg:#f1f5f9;--sp-card:#fff;--sp-text:#0f172a;--sp-muted:#64748b;
+  --sp-border:#dfe6ef;--sp-green:#16a34a;--sp-red:#ef4444;--sp-orange:#f59e0b;
+}
+*{box-sizing:border-box}
+body{font-family:Inter,Segoe UI,Arial,sans-serif!important;background:var(--sp-bg)!important;color:var(--sp-text)!important}
+a{color:var(--sp-blue)}
+/* Shared shell */
+.layout,.parking-layout{min-height:100vh!important;display:flex!important;background:var(--sp-bg)!important}
+.sidebar,.parking-sidebar{width:245px!important;min-width:245px!important;background:linear-gradient(180deg,#0b1730,#101f3b)!important;color:#fff!important;position:fixed!important;inset:0 auto 0 0!important;padding:22px 14px!important;z-index:1000!important;overflow:hidden!important}
+.side-brand,.brand{display:flex!important;align-items:center!important;gap:12px!important;padding:8px 12px 28px!important;color:#fff!important}
+.side-logo,.brand-icon{width:42px!important;height:42px!important;border-radius:12px!important;background:linear-gradient(135deg,#3b82f6,#2563eb)!important;display:grid!important;place-items:center!important;color:#fff!important;font-size:19px!important;box-shadow:0 8px 20px rgba(37,99,235,.3)!important;flex:0 0 auto}
+.brand strong,.side-brand span{font-size:17px!important;font-weight:800!important}.brand small{display:block!important;color:#94a3b8!important;font-size:11px!important;margin-top:3px!important}
+.nav,.side-nav{display:flex!important;flex-direction:column!important;gap:5px!important;margin-top:0!important}
+.nav a,.side-nav a{color:#cbd5e1!important;text-decoration:none!important;padding:12px 14px!important;border-radius:10px!important;display:flex!important;align-items:center!important;gap:11px!important;font-size:14px!important;transition:.2s!important;margin:0!important}
+.nav a:hover,.nav a.active,.side-nav a:hover,.side-nav a.active{background:linear-gradient(135deg,#2563eb,#3b82f6)!important;color:#fff!important;box-shadow:0 8px 20px rgba(37,99,235,.22)!important}
+.nav i,.side-nav i{width:20px;text-align:center}.side-bottom,.sidebar-bottom{position:absolute!important;bottom:20px!important;left:14px!important;right:14px!important}
+.ai-status,.ai-box{padding:14px!important;border:1px solid rgba(96,165,250,.3)!important;background:rgba(37,99,235,.12)!important;border-radius:12px!important;color:#fff!important}
+.ai-status h4,.ai-status strong,.ai-box-title{margin:0!important}.ai-status p,.ai-box p{color:#94a3b8!important;font-size:11px!important;line-height:1.5!important}
+.main,.parking-main{margin-left:245px!important;width:calc(100% - 245px)!important;min-height:100vh!important;background:var(--sp-bg)!important;padding-top:0!important}
+.topbar,.parking-topbar{position:sticky!important;left:auto!important;right:auto!important;top:0!important;height:72px!important;background:#fff!important;border-bottom:1px solid var(--sp-border)!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:0 30px!important;z-index:900!important;box-shadow:0 1px 0 rgba(15,23,42,.02)!important}
+.topbar>div:first-child,.top-title{color:var(--sp-muted)!important;font-size:13px!important}
+.top-user{display:flex!important;align-items:center!important;gap:11px!important}.avatar,.user-avatar{width:38px!important;height:38px!important;border-radius:50%!important;background:#dbeafe!important;color:#2563eb!important;display:grid!important;place-items:center!important;font-weight:800!important}
+.page-content,.parking-content{padding:30px!important;max-width:1500px!important;margin:0 auto!important;background:var(--sp-bg)!important}
+.page-head,.page-header{display:flex!important;justify-content:space-between!important;align-items:center!important;margin-bottom:24px!important}.page-head h1,.page-header h1{margin:0 0 6px!important;font-size:29px!important;letter-spacing:-.5px!important}.page-head p,.page-header p{color:var(--sp-muted)!important;margin:0!important;font-size:14px!important}
+.stats,.parking-stats{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:16px!important;margin-bottom:25px!important}.stats.mini{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.stat-card,.stats>div,.parking-stat,.panel,.slot-section,.vehicle-dashboard-panel,.order-card,.cart-panel,.products-page,.profile-card,.history-card{background:#fff!important;border:1px solid var(--sp-border)!important;border-radius:16px!important;box-shadow:0 4px 15px rgba(15,23,42,.035)!important}
+.stat-card,.stats>div,.parking-stat{padding:20px!important;transition:.25s!important}.stat-card:hover,.parking-stat:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(15,23,42,.09)!important}
+.stats b,.stat-number{font-size:24px!important;font-weight:800!important;color:#0f172a!important}.stats span,.stat-label{color:var(--sp-muted)!important;font-size:12px!important}
+.panel,.slot-section{padding:23px!important;margin-bottom:20px!important}.panel h3,.slot-section h2{color:#0f172a!important}
+.two-col{gap:20px!important}.slot-container{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:18px!important}
+.slot-card{background:#fff!important;border:1px solid var(--sp-border)!important;border-radius:15px!important;padding:20px!important;box-shadow:0 4px 15px rgba(15,23,42,.035)!important}.slot-card:hover{transform:translateY(-4px)!important;box-shadow:0 15px 35px rgba(15,23,42,.10)!important}.slot-card.available{border-top:4px solid #22c55e!important}.slot-card.occupied{border-top:4px solid #ef4444!important;background:#fffafa!important}
+.primary-btn,.vehicle-submit-btn,.slot-action,.slot-card button,.btn-cart{background:linear-gradient(135deg,#2563eb,#3b82f6)!important;color:#fff!important;border:0!important;border-radius:10px!important;font-weight:700!important}.primary-btn:hover,.slot-action:hover,.slot-card button:hover,.btn-cart:hover{background:#1d4ed8!important}
+.outline-btn,.location-badge,.vehicle-location-btn{background:#fff!important;border:1px solid var(--sp-border)!important;color:#334155!important;border-radius:10px!important}
+.badge{background:#dcfce7!important;color:#15803d!important;border-radius:20px!important;padding:5px 10px!important;font-size:11px!important;font-weight:700!important}
+.status-card{background:#fff!important;border:1px solid var(--sp-border)!important;border-radius:12px!important;padding:14px!important}.dot.green{background:#16a34a!important}
+/* Forms */
+input,select,textarea{border:1px solid #d8e0ea!important;border-radius:9px!important;background:#f8fafc!important;color:#0f172a!important}input:focus,select:focus,textarea:focus{border-color:#2563eb!important;box-shadow:0 0 0 3px rgba(37,99,235,.1)!important;background:#fff!important}
+/* Parking-specific detail style */
+.parking-stats .parking-stat .stat-icon{width:46px!important;height:46px!important;border-radius:12px!important}.stat-blue{background:#dbeafe!important;color:#2563eb!important}.stat-green{background:#dcfce7!important;color:#16a34a!important}.stat-red{background:#fee2e2!important;color:#ef4444!important}.stat-orange{background:#fef3c7!important;color:#d97706!important}
+.legend-dot{width:9px!important;height:9px!important;border-radius:50%!important}.available-dot{background:#22c55e!important}.occupied-dot{background:#ef4444!important}
+/* Live / online */
+.live-status,.online-status{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700}.live-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 0 rgba(34,197,94,.5);animation:spPulse 1.7s infinite}.live-dot.red{background:#ef4444}@keyframes spPulse{70%{box-shadow:0 0 0 7px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+/* Modals */
+.product-modal,.booking-modal{backdrop-filter:blur(4px)}
+/* Hide old dark dashboard treatment */
+body:has(.layout) .main, body:has(.layout) .page-content{background:var(--sp-bg)!important}
+/* Responsive */
+@media(max-width:1100px){.stats,.parking-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}.slot-container{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:760px){.sidebar,.parking-sidebar{transform:translateX(-100%);transition:.25s}.sidebar.open,.parking-sidebar.open{transform:translateX(0)}.main,.parking-main{margin-left:0!important;width:100%!important}.topbar,.parking-topbar{padding:0 16px!important}.page-content,.parking-content{padding:18px!important}.page-head,.page-header{align-items:flex-start!important;flex-direction:column!important;gap:14px}.stats,.parking-stats,.slot-container{grid-template-columns:1fr!important}.two-col{grid-template-columns:1fr!important}.top-user .outline-btn{display:none}}

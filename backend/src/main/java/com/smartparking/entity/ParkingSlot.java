@@ -76,6 +76,16 @@ public class ParkingSlot {
     private String status;
 
     // ============================================================
+    // GPS LOCATION
+    // ============================================================
+
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
+
+    // ============================================================
     // DEFAULT CONSTRUCTOR
     // ============================================================
 
@@ -208,5 +218,37 @@ public class ParkingSlot {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    // ============================================================
+    // GET LATITUDE
+    // ============================================================
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    // ============================================================
+    // SET LATITUDE
+    // ============================================================
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    // ============================================================
+    // GET LONGITUDE
+    // ============================================================
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    // ============================================================
+    // SET LONGITUDE
+    // ============================================================
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 }

@@ -8,115 +8,1265 @@
     <title>Parking Slots - Smart Car Parking</title>
 
     <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        /* =====================================================
+           PARKING PAGE
+        ===================================================== */
+        
+         :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --dark: #0f172a;
+            --dark-2: #16233d;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --green: #16a34a;
+            --red: #ef4444;
+            --orange: #f59e0b;
+            --border: #e2e8f0;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Inter, Arial, sans-serif;
+        }
+        /* =====================================================
+           LAYOUT
+        ===================================================== */
+        
+        .parking-layout {
+            min-height: 100vh;
+            display: flex;
+        }
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+        
+        .parking-sidebar {
+            width: 245px;
+            min-height: 100vh;
+            background: linear-gradient( 180deg, #0b162b, #101e38);
+            color: white;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 1000;
+            padding: 22px 14px;
+        }
+        
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px 28px;
+        }
+        
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient( 135deg, #3b82f6, #2563eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, .3);
+        }
+        
+        .brand strong {
+            font-size: 17px;
+        }
+        
+        .brand small {
+            display: block;
+            color: #94a3b8;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+        
+        .side-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .side-nav a {
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 13px 14px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            transition: .2s;
+        }
+        
+        .side-nav a:hover {
+            background: rgba(255, 255, 255, .08);
+            color: white;
+        }
+        
+        .side-nav a.active {
+            background: linear-gradient( 135deg, #2563eb, #3b82f6);
+            color: white;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, .25);
+        }
+        
+        .side-nav i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-bottom {
+            position: absolute;
+            bottom: 25px;
+            left: 14px;
+            right: 14px;
+        }
+        
+        .ai-box {
+            padding: 15px;
+            border: 1px solid rgba(96, 165, 250, .25);
+            background: rgba(37, 99, 235, .12);
+            border-radius: 13px;
+        }
+        
+        .ai-box-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+        
+        .ai-box p {
+            color: #94a3b8;
+            font-size: 11px;
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+        /* =====================================================
+           MAIN
+        ===================================================== */
+        
+        .parking-main {
+            margin-left: 245px;
+            width: calc(100% - 245px);
+            min-height: 100vh;
+        }
+        /* =====================================================
+           TOPBAR
+        ===================================================== */
+        
+        .parking-topbar {
+            height: 72px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .top-title {
+            font-size: 14px;
+            color: var(--muted);
+        }
+        
+        .top-user {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+        
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+        
+        .user-info strong {
+            display: block;
+            font-size: 13px;
+        }
+        
+        .user-info span {
+            color: var(--muted);
+            font-size: 11px;
+        }
+        /* =====================================================
+           CONTENT
+        ===================================================== */
+        
+        .parking-content {
+            padding: 30px;
+            max-width: 1500px;
+            margin: auto;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .page-header h1 {
+            margin: 0;
+            font-size: 29px;
+            letter-spacing: -.5px;
+        }
+        
+        .page-header p {
+            color: var(--muted);
+            margin: 7px 0 0;
+            font-size: 14px;
+        }
+        
+        .location-badge {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 10px 15px;
+            border-radius: 10px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+        
+        .location-badge i {
+            color: var(--primary);
+            margin-right: 6px;
+        }
+        /* =====================================================
+           STAT CARDS
+        ===================================================== */
+        
+        .parking-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+        
+        .parking-stat {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(15, 23, 42, .03);
+        }
+        
+        .stat-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .stat-blue {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+        
+        .stat-green {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+        
+        .stat-red {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+        
+        .stat-orange {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        
+        .stat-number {
+            font-size: 23px;
+            font-weight: 800;
+        }
+        
+        .stat-label {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 3px;
+        }
+        /* =====================================================
+           SLOT HEADER
+        ===================================================== */
+        
+        .slot-section {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            padding: 23px;
+        }
+        
+        .slot-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .slot-section-header h2 {
+            margin: 0;
+            font-size: 19px;
+        }
+        
+        .slot-section-header p {
+            margin: 5px 0 0;
+            color: var(--muted);
+            font-size: 12px;
+        }
+        
+        .legend {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .legend-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+        }
+        
+        .available-dot {
+            background: #22c55e;
+        }
+        
+        .occupied-dot {
+            background: #ef4444;
+        }
+        /* =====================================================
+           SLOT GRID
+        ===================================================== */
+        
+        .slot-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+        
+        .slot-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: .25s;
+        }
+        
+        .slot-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(15, 23, 42, .10);
+        }
+        /* Available cards */
+        
+        .slot-card.available {
+            border-top: 4px solid #22c55e;
+        }
+        /* Occupied cards */
+        
+        .slot-card.occupied {
+            border-top: 4px solid #ef4444;
+            background: #fffafa;
+        }
+        
+        .slot-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .slot-name {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 19px;
+            font-weight: 800;
+        }
+        
+        .slot-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            background: #eff6ff;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .slot-status {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 6px 10px;
+            border-radius: 20px;
+        }
+        
+        .slot-status.available {
+            background: #dcfce7;
+            color: #15803d;
+        }
+        
+        .slot-status.occupied {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .slot-details {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 11px;
+        }
+        
+        .detail {
+            background: #f8fafc;
+            padding: 10px;
+            border-radius: 9px;
+        }
+        
+        .detail-label {
+            color: #94a3b8;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+        }
+        
+        .detail-value {
+            color: #334155;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 3px;
+        }
+        
+        .slot-price {
+            margin-top: 17px;
+            font-size: 14px;
+            font-weight: 800;
+            color: #2563eb;
+        }
+        
+        .slot-action {
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            padding: 11px;
+            margin-top: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            background: #2563eb;
+            color: white;
+            transition: .2s;
+        }
+        
+        .slot-action:hover {
+            background: #1d4ed8;
+        }
+        
+        .slot-action:disabled {
+            background: #e2e8f0;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+        /* =====================================================
+           LOADING
+        ===================================================== */
+        
+        #loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--muted);
+        }
+        /* =====================================================
+           BOOKING PANEL
+        ===================================================== */
+        
+        #bookingSection {
+            margin-top: 25px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, .06);
+        }
+        
+        #bookingSection h2 {
+            margin-top: 0;
+        }
+        
+        #selectedSlotInfo {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 20px;
+        }
+        
+        #bookingForm {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+        
+        #bookingForm label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 7px;
+        }
+        
+        #bookingForm select,
+        #bookingForm input {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 11px 12px;
+            outline: none;
+            background: #f8fafc;
+        }
+        
+        #bookingForm select:focus,
+        #bookingForm input:focus {
+            border-color: var(--primary);
+            background: white;
+        }
+        
+        #bookingForm button {
+            border: none;
+            border-radius: 9px;
+            padding: 12px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        
+        #bookingForm button[type="submit"] {
+            background: var(--primary);
+            color: white;
+        }
+        
+        #bookingForm button[type="button"] {
+            background: #e2e8f0;
+            color: #334155;
+        }
+        
+        #bookingMessage {
+            margin-top: 15px;
+        }
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+        
+        @media (max-width: 1100px) {
+            .parking-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .slot-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 750px) {
+            .parking-sidebar {
+                display: none;
+            }
+            .parking-main {
+                margin-left: 0;
+                width: 100%;
+            }
+            .parking-content {
+                padding: 18px;
+            }
+            .parking-topbar {
+                padding: 0 18px;
+            }
+            .page-header {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 15px;
+            }
+            .parking-stats {
+                grid-template-columns: 1fr;
+            }
+            .slot-container {
+                grid-template-columns: 1fr;
+            }
+            .slot-section-header {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 12px;
+            }
+            #bookingForm {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
 </head>
+
 
 <body>
 
-    <!-- HEADER -->
-    <header>
-        <h1>🚗 Smart Car Parking</h1>
 
-        <nav>
-            <a href="index.html">Dashboard</a>
-            <a href="parking-slots.html">Parking Slots</a>
-            <a href="vehicles.html">Vehicles</a>
-            <a href="bookings.html">Bookings</a>
-        </nav>
-    </header>
+    <div class="parking-layout">
 
 
-    <!-- MAIN CONTENT -->
-    <main>
+        <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
 
-        <h2>🅿️ Parking Slots</h2>
+        <aside class="parking-sidebar">
 
-        <p>
-            Select an available parking slot to continue booking.
-        </p>
+            <div class="brand">
+
+                <div class="brand-icon">
+                    <i class="fa-solid fa-square-parking"></i>
+                </div>
+
+                <div>
+                    <strong>Smart Parking</strong>
+                    <small>Management System</small>
+                </div>
+
+            </div>
 
 
-        <!-- LOADING -->
-        <div id="loading">
-            Loading parking slots...
+            <nav class="side-nav">
+
+                <a href="dashboard.html">
+                    <i class="fa-solid fa-chart-line"></i> Dashboard
+                </a>
+
+                <a href="parking-slots.html" class="active">
+                    <i class="fa-solid fa-square-parking"></i> Parking Slots
+                </a>
+
+                <a href="vehicles.html">
+                    <i class="fa-solid fa-car"></i> Vehicles
+                </a>
+
+                <a href="bookings.html">
+                    <i class="fa-solid fa-calendar-check"></i> Bookings
+                </a>
+
+                <a href="history.html">
+                    <i class="fa-solid fa-clock-rotate-left"></i> Parking History
+                </a>
+
+                <a href="products.html">
+                    <i class="fa-solid fa-box"></i> Products
+                </a>
+
+                <a href="cart.html">
+                    <i class="fa-solid fa-cart-shopping"></i> Cart
+                </a>
+
+                <a href="orders.html">
+                    <i class="fa-solid fa-receipt"></i> Orders
+                </a>
+
+                <a href="profile.html">
+                    <i class="fa-solid fa-user"></i> Profile
+                </a>
+
+            </nav>
+
+
+            <div class="sidebar-bottom">
+
+                <div class="ai-box">
+
+                    <div class="ai-box-title">
+
+                        <i class="fa-solid fa-robot"></i> AI Parking
+
+                    </div>
+
+                    <p>
+                        Smart parking recommendation is active.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+        <div class="parking-main">
+
+
+            <!-- TOPBAR -->
+
+            <header class="parking-topbar">
+
+                <div class="top-title">
+
+                    <i class="fa-solid fa-location-dot"></i> Smart Parking / Parking Slots
+
+                </div>
+
+
+                <div class="top-user">
+
+                    <div class="user-avatar" id="userAvatar">
+                        U
+                    </div>
+
+                    <div class="user-info">
+
+                        <strong id="userName">
+                        User
+                    </strong>
+
+                        <span>
+                        Parking Customer
+                    </span>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- CONTENT -->
+
+            <main class="parking-content">
+
+
+                <!-- PAGE HEADER -->
+
+                <div class="page-header">
+
+                    <div>
+
+                        <h1>
+                            Parking Slots
+                        </h1>
+
+                        <p>
+                            Find and book your preferred parking slot.
+                        </p>
+
+                    </div>
+
+
+                    <div class="location-badge">
+
+                        <i class="fa-solid fa-location-dot"></i> Live Parking Area
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                 STATISTICS
+            ================================================== -->
+
+                <div class="parking-stats">
+
+
+                    <div class="parking-stat">
+
+                        <div class="stat-icon stat-blue">
+
+                            <i class="fa-solid fa-square-parking"></i>
+
+                        </div>
+
+                        <div>
+
+                            <div class="stat-number" id="totalSlotCount">
+                                0
+                            </div>
+
+                            <div class="stat-label">
+                                Total Slots
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="parking-stat">
+
+                        <div class="stat-icon stat-green">
+
+                            <i class="fa-solid fa-circle-check"></i>
+
+                        </div>
+
+                        <div>
+
+                            <div class="stat-number" id="availableSlotCount">
+                                0
+                            </div>
+
+                            <div class="stat-label">
+                                Available
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="parking-stat">
+
+                        <div class="stat-icon stat-red">
+
+                            <i class="fa-solid fa-car"></i>
+
+                        </div>
+
+                        <div>
+
+                            <div class="stat-number" id="occupiedSlotCount">
+                                0
+                            </div>
+
+                            <div class="stat-label">
+                                Occupied
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="parking-stat">
+
+                        <div class="stat-icon stat-orange">
+
+                            <i class="fa-solid fa-bolt"></i>
+
+                        </div>
+
+                        <div>
+
+                            <div class="stat-number">
+                                AI
+                            </div>
+
+                            <div class="stat-label">
+                                Smart Recommendation
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- =================================================
+                 SLOT SECTION
+            ================================================== -->
+
+                <section class="slot-section">
+
+
+                    <div class="slot-section-header">
+
+                        <div>
+
+                            <h2>
+                                <i class="fa-solid fa-square-parking"></i> Available Parking Area
+                            </h2>
+
+                            <p>
+                                Select an available slot to continue booking.
+                            </p>
+
+                        </div>
+
+
+                        <div class="legend">
+
+                            <div class="legend-item">
+
+                                <span class="legend-dot available-dot"></span> Available
+
+                            </div>
+
+
+                            <div class="legend-item">
+
+                                <span class="legend-dot occupied-dot"></span> Occupied
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- KEEP ORIGINAL ID -->
+
+                    <div id="loading">
+                        Loading parking slots...
+                    </div>
+
+
+                    <!-- KEEP ORIGINAL ID + CLASS -->
+
+                    <div id="slotContainer" class="slot-container">
+                    </div>
+
+
+                </section>
+
+
+                <!-- =================================================
+                 BOOKING SECTION
+            ================================================== -->
+
+                <div id="bookingSection" style="display: none;">
+
+
+                    <h2>
+
+                        <i class="fa-solid fa-calendar-check"></i> Book Parking Slot
+
+                    </h2>
+
+
+                    <div id="selectedSlotInfo"></div>
+
+
+                    <form id="bookingForm">
+
+
+                        <div>
+
+                            <label for="vehicleSelect">
+                            Select Vehicle
+                        </label>
+
+                            <select id="vehicleSelect" required>
+
+                            <option value="">
+                                Select your vehicle
+                            </option>
+
+                        </select>
+
+                        </div>
+
+
+                        <div>
+
+                            <label for="bookingDate">
+                            Booking Date
+                        </label>
+
+                            <input type="date" id="bookingDate" required>
+
+                        </div>
+
+
+                        <div>
+
+                            <label for="startTime">
+                            Start Time
+                        </label>
+
+                            <input type="time" id="startTime" required>
+
+                        </div>
+
+
+                        <div>
+
+                            <label for="endTime">
+                            End Time
+                        </label>
+
+                            <input type="time" id="endTime" required>
+
+                        </div>
+
+
+                        <button type="submit">
+
+                        <i class="fa-solid fa-check"></i>
+
+                        Confirm Booking
+
+                    </button>
+
+
+                        <button type="button" id="cancelBooking">
+
+                        <i class="fa-solid fa-xmark"></i>
+
+                        Cancel
+
+                    </button>
+
+
+                    </form>
+
+
+                    <div id="bookingMessage"></div>
+
+
+                </div>
+
+
+            </main>
+
         </div>
 
-
-        <!-- SLOT CONTAINER -->
-        <div id="slotContainer" class="slot-container"></div>
+    </div>
 
 
-        <!-- BOOKING SECTION -->
-        <div id="bookingSection" style="display: none;">
+    <!-- =====================================================
+     JAVASCRIPT
+====================================================== -->
 
-            <h2>🚗 Book Parking Slot</h2>
-
-            <div id="selectedSlotInfo"></div>
-
-
-            <form id="bookingForm">
-
-                <div>
-                    <label for="vehicleSelect">
-                        Select Vehicle
-                    </label>
-
-                    <select id="vehicleSelect" required>
-                        <option value="">
-                            Select your vehicle
-                        </option>
-                    </select>
-                </div>
-
-
-                <div>
-                    <label for="bookingDate">
-                        Booking Date
-                    </label>
-
-                    <input type="date" id="bookingDate" required>
-                </div>
-
-
-                <div>
-                    <label for="startTime">
-                        Start Time
-                    </label>
-
-                    <input type="time" id="startTime" required>
-                </div>
-
-
-                <div>
-                    <label for="endTime">
-                        End Time
-                    </label>
-
-                    <input type="time" id="endTime" required>
-                </div>
-
-
-                <button type="submit">
-                    🚗 Confirm Booking
-                </button>
-
-                <button type="button" id="cancelBooking">
-                    Cancel
-                </button>
-
-            </form>
-
-
-            <!-- BOOKING MESSAGE -->
-            <div id="bookingMessage"></div>
-
-        </div>
-
-    </main>
-
-
-    <!-- JAVASCRIPT -->
     <script src="js/config.js"></script>
+
     <script src="js/parking-slots.js"></script>
+
+
+    <script>
+        /*
+                       Extra UI statistics.
+
+                       This does NOT replace parking-slots.js.
+                       It only reads the same API and updates the
+                       four small statistics cards.
+                    */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function() {
+
+                loadParkingPageStats();
+
+                loadParkingUser();
+
+            }
+        );
+
+
+        async function loadParkingPageStats() {
+
+            try {
+
+                const response =
+                    await fetch(
+                        API.parkingSlots
+                    );
+
+
+                if (!response.ok) {
+                    throw new Error(
+                        "HTTP " + response.status
+                    );
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                const slots =
+                    Array.isArray(data) ?
+                    data :
+                    (data.content || []);
+
+
+                const total =
+                    slots.length;
+
+
+                const available =
+                    slots.filter(
+                        slot =>
+                        String(
+                            slot.status || ""
+                        ).toUpperCase() ===
+                        "AVAILABLE"
+                    ).length;
+
+
+                const occupied =
+                    slots.filter(
+                        slot =>
+                        String(
+                            slot.status || ""
+                        ).toUpperCase() ===
+                        "OCCUPIED"
+                    ).length;
+
+
+                const totalElement =
+                    document.getElementById(
+                        "totalSlotCount"
+                    );
+
+
+                const availableElement =
+                    document.getElementById(
+                        "availableSlotCount"
+                    );
+
+
+                const occupiedElement =
+                    document.getElementById(
+                        "occupiedSlotCount"
+                    );
+
+
+                if (totalElement) {
+                    totalElement.textContent =
+                        total;
+                }
+
+
+                if (availableElement) {
+                    availableElement.textContent =
+                        available;
+                }
+
+
+                if (occupiedElement) {
+                    occupiedElement.textContent =
+                        occupied;
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Parking statistics error:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        function loadParkingUser() {
+
+            try {
+
+                const userData =
+                    localStorage.getItem(
+                        "loggedInUser"
+                    ) ||
+                    localStorage.getItem(
+                        "user"
+                    );
+
+
+                if (!userData) {
+                    return;
+                }
+
+
+                const user =
+                    JSON.parse(userData);
+
+
+                const name =
+                    user.name ||
+                    user.username ||
+                    "User";
+
+
+                const nameElement =
+                    document.getElementById(
+                        "userName"
+                    );
+
+
+                const avatarElement =
+                    document.getElementById(
+                        "userAvatar"
+                    );
+
+
+                if (nameElement) {
+
+                    nameElement.textContent =
+                        name;
+
+                }
+
+
+                if (avatarElement) {
+
+                    avatarElement.textContent =
+                        name
+                        .charAt(0)
+                        .toUpperCase();
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "User loading error:",
+                    error
+                );
+
+            }
+
+        }
+    </script>
+
 
 </body>
 

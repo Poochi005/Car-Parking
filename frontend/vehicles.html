@@ -2,117 +2,743 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>My Vehicles - Smart Car Parking</title>
 
     <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        /* =====================================================
+           VEHICLES PAGE - PARKING SLOTS STYLE
+        ===================================================== */
+        
+        .vehicles-page {
+            width: 100%;
+        }
+        /* PAGE HEADER */
+        
+        .vehicles-page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 22px;
+        }
+        
+        .vehicles-page-header h1 {
+            margin: 0;
+            font-size: 30px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+        
+        .vehicles-page-header p {
+            margin: 7px 0 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+        
+        .vehicle-location-btn {
+            border: 1px solid #dbe3ee;
+            background: #ffffff;
+            color: #2563eb;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .vehicle-location-btn i {
+            margin-right: 6px;
+        }
+        /* =====================================================
+           STATISTICS
+        ===================================================== */
+        
+        .vehicle-dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+        
+        .vehicle-stat-card {
+            background: #ffffff;
+            border: 1px solid #dfe6ef;
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+        }
+        
+        .vehicle-stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            flex-shrink: 0;
+        }
+        
+        .vehicle-blue {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+        
+        .vehicle-green {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+        
+        .vehicle-red {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+        
+        .vehicle-yellow {
+            background: #fef3c7;
+            color: #f59e0b;
+        }
+        
+        .vehicle-stat-value {
+            font-size: 22px;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.1;
+        }
+        
+        .vehicle-stat-label {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        /* =====================================================
+           MAIN TWO COLUMN
+        ===================================================== */
+        
+        .vehicles-content-grid {
+            display: grid;
+            grid-template-columns: 420px minmax(0, 1fr);
+            gap: 20px;
+            align-items: start;
+        }
+        /* =====================================================
+           PANELS
+        ===================================================== */
+        
+        .vehicle-dashboard-panel {
+            background: #ffffff;
+            border: 1px solid #dfe6ef;
+            border-radius: 17px;
+            padding: 22px;
+            box-shadow: 0 5px 18px rgba(15, 23, 42, 0.04);
+        }
+        
+        .vehicle-panel-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .vehicle-panel-heading h2 {
+            margin: 0;
+            font-size: 19px;
+            color: #0f172a;
+        }
+        
+        .vehicle-panel-heading i {
+            color: #2563eb;
+            margin-right: 7px;
+        }
+        
+        .vehicle-panel-subtitle {
+            color: #64748b;
+            font-size: 12px;
+            margin: 5px 0 20px;
+        }
+        /* =====================================================
+           ADD VEHICLE FORM
+        ===================================================== */
+        
+        #vehicleForm {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .vehicle-input-group {
+            position: relative;
+        }
+        
+        .vehicle-input-group i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 13px;
+            pointer-events: none;
+        }
+        
+        #vehicleForm input {
+            width: 100%;
+            height: 47px;
+            border: 1px solid #d8e1ec;
+            border-radius: 10px;
+            background: #f8fafc;
+            padding: 0 14px 0 39px;
+            font-size: 13px;
+            color: #0f172a;
+            outline: none;
+            transition: 0.2s;
+        }
+        
+        #vehicleForm input::placeholder {
+            color: #94a3b8;
+        }
+        
+        #vehicleForm input:focus {
+            background: #ffffff;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+        }
+        /* =====================================================
+           ADD BUTTON
+        ===================================================== */
+        
+        .vehicle-submit-btn {
+            height: 47px;
+            border: none;
+            border-radius: 10px;
+            background: #2563eb;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 2px;
+            transition: 0.2s;
+        }
+        
+        .vehicle-submit-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+        
+        .vehicle-submit-btn i {
+            margin-right: 7px;
+        }
+        /* =====================================================
+           MESSAGE
+        ===================================================== */
+        
+        #vehicleMsg {
+            margin-top: 12px;
+            font-size: 13px;
+        }
+        /* =====================================================
+           REGISTERED HEADER
+        ===================================================== */
+        
+        .registered-vehicles-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+        
+        .registered-count {
+            background: #eff6ff;
+            color: #2563eb;
+            padding: 7px 11px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        /* =====================================================
+           VEHICLE LIST
+        ===================================================== */
+        
+        #vehicleList {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+        /* =====================================================
+           VEHICLE CARDS
+        ===================================================== */
+        
+        #vehicleList>div {
+            position: relative;
+            background: #ffffff;
+            border: 1px solid #dbe3ed;
+            border-radius: 11px;
+            padding: 16px 18px;
+            min-height: 82px;
+            transition: 0.2s;
+        }
+        
+        #vehicleList>div:hover {
+            border-color: #bfdbfe;
+            box-shadow: 0 7px 18px rgba(15, 23, 42, 0.06);
+            transform: translateY(-1px);
+        }
+        /* Blue left line */
+        
+        #vehicleList>div::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 11px 0 0 11px;
+            background: #2563eb;
+        }
+        /* =====================================================
+           VEHICLE TEXT
+        ===================================================== */
+        
+        #vehicleList h3,
+        #vehicleList h4 {
+            margin: 0 0 5px;
+            font-size: 15px;
+            color: #0f172a;
+        }
+        
+        #vehicleList p {
+            margin: 3px 0;
+            color: #64748b;
+            font-size: 12px;
+        }
+        
+        #vehicleList strong {
+            color: #0f172a;
+        }
+        /* =====================================================
+           DELETE BUTTON
+        ===================================================== */
+        
+        #vehicleList button {
+            border: none;
+            background: transparent;
+            color: #ef4444;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        #vehicleList button:hover {
+            color: #dc2626;
+            text-decoration: underline;
+        }
+        /* =====================================================
+           LOADING
+        ===================================================== */
+        
+        #vehicleListMessage {
+            text-align: center;
+            color: #64748b;
+            padding: 35px 10px;
+            font-size: 13px;
+        }
+        /* =====================================================
+           AI INFORMATION
+        ===================================================== */
+        
+        .vehicle-ai-box {
+            margin-top: 18px;
+            padding: 13px 15px;
+            border-radius: 10px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+        
+        .vehicle-ai-box i {
+            margin-right: 5px;
+        }
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+        
+        @media (max-width: 1150px) {
+            .vehicle-dashboard-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .vehicles-content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 650px) {
+            .vehicle-dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+            .vehicles-page-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .vehicle-location-btn {
+                display: none;
+            }
+        }
+    </style>
+
 </head>
+
 
 <body>
 
+
+    <!-- =========================================================
+     APP SHELL
+========================================================== -->
+
     <div id="app"></div>
+
+
+    <!-- =========================================================
+     MAIN CONTENT
+========================================================== -->
 
     <main class="page-content">
 
-        <!-- =====================================================
+        <div class="vehicles-page">
+
+
+            <!-- =================================================
              PAGE HEADER
-        ====================================================== -->
+        ================================================== -->
 
-        <div class="page-head">
+            <div class="vehicles-page-header">
 
-            <div>
+                <div>
 
-                <h1>
-                    My Vehicles
-                </h1>
+                    <h1>
+                        My Vehicles
+                    </h1>
 
-                <p class="muted">
-                    Add, update and remove registered vehicles
-                </p>
+                    <p>
+                        Add and manage your registered vehicles.
+                    </p>
+
+                </div>
+
+
+                <button class="vehicle-location-btn" type="button">
+
+                <i class="fa-solid fa-car"></i>
+
+                Vehicle Management
+
+            </button>
 
             </div>
 
-        </div>
+
+            <!-- =================================================
+             STATISTICS
+        ================================================== -->
+
+            <div class="vehicle-dashboard-stats">
 
 
-        <!-- =====================================================
-             VEHICLE CONTENT
-        ====================================================== -->
+                <!-- TOTAL -->
 
-        <div class="two-col">
+                <div class="vehicle-stat-card">
+
+                    <div class="vehicle-stat-icon vehicle-blue">
+
+                        <i class="fa-solid fa-car"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div class="vehicle-stat-value" id="vehicleTotalCount">
+
+                            0
+
+                        </div>
+
+                        <div class="vehicle-stat-label">
+
+                            Total Vehicles
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACTIVE -->
+
+                <div class="vehicle-stat-card">
+
+                    <div class="vehicle-stat-icon vehicle-green">
+
+                        <i class="fa-solid fa-circle-check"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div class="vehicle-stat-value">
+
+                            Active
+
+                        </div>
+
+                        <div class="vehicle-stat-label">
+
+                            Parking Ready
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CAR -->
+
+                <div class="vehicle-stat-card">
+
+                    <div class="vehicle-stat-icon vehicle-red">
+
+                        <i class="fa-solid fa-car-side"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div class="vehicle-stat-value">
+
+                            Smart
+
+                        </div>
+
+                        <div class="vehicle-stat-label">
+
+                            Vehicle Detection
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- AI -->
+
+                <div class="vehicle-stat-card">
+
+                    <div class="vehicle-stat-icon vehicle-yellow">
+
+                        <i class="fa-solid fa-bolt"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div class="vehicle-stat-value">
+
+                            AI
+
+                        </div>
+
+                        <div class="vehicle-stat-label">
+
+                            Smart Recommendation
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
 
 
             <!-- =================================================
+             MAIN CONTENT
+        ================================================== -->
+
+            <div class="vehicles-content-grid">
+
+
+                <!-- =================================================
                  ADD VEHICLE
             ================================================== -->
 
-            <section class="panel">
-
-                <h3>
-                    🚘 Add Vehicle
-                </h3>
-
-                <p class="muted">
-                    Register your vehicle for smart parking.
-                </p>
+                <section class="vehicle-dashboard-panel">
 
 
-                <form id="vehicleForm">
+                    <div class="vehicle-panel-heading">
 
-                    <input id="vehicleNumber" type="text" placeholder="Vehicle Number" required>
+                        <h2>
 
+                            <i class="fa-solid fa-plus-circle"></i> Add Vehicle
 
-                    <input id="vehicleModel" type="text" placeholder="Vehicle Model" required>
+                        </h2>
 
-
-                    <input id="vehicleColor" type="text" placeholder="Vehicle Color" required>
-
-
-                    <input id="vehicleSize" type="text" placeholder="Size (Small / Medium / Large)" required>
+                    </div>
 
 
-                    <input id="vehicleType" type="text" placeholder="Type (Car / SUV / Electric Car)" required>
+                    <p class="vehicle-panel-subtitle">
+
+                        Register your vehicle for smart parking.
+
+                    </p>
 
 
-                    <button class="primary-btn" type="submit">
-                        ➕ Add Vehicle
+                    <form id="vehicleForm">
+
+
+                        <div class="vehicle-input-group">
+
+                            <i class="fa-solid fa-id-card"></i>
+
+                            <input id="vehicleNumber" type="text" placeholder="Vehicle Number" required>
+
+                        </div>
+
+
+                        <div class="vehicle-input-group">
+
+                            <i class="fa-solid fa-car"></i>
+
+                            <input id="vehicleModel" type="text" placeholder="Vehicle Model" required>
+
+                        </div>
+
+
+                        <div class="vehicle-input-group">
+
+                            <i class="fa-solid fa-palette"></i>
+
+                            <input id="vehicleColor" type="text" placeholder="Vehicle Color" required>
+
+                        </div>
+
+
+                        <div class="vehicle-input-group">
+
+                            <i class="fa-solid fa-ruler-horizontal"></i>
+
+                            <input id="vehicleSize" type="text" placeholder="Size (Small / Medium / Large)" required>
+
+                        </div>
+
+
+                        <div class="vehicle-input-group">
+
+                            <i class="fa-solid fa-car-side"></i>
+
+                            <input id="vehicleType" type="text" placeholder="Type (Car / SUV / Electric Car)" required>
+
+                        </div>
+
+
+                        <button class="vehicle-submit-btn" type="submit">
+
+                        <i class="fa-solid fa-plus"></i>
+
+                        Add Vehicle
+
                     </button>
 
-                </form>
+
+                    </form>
 
 
-                <div id="vehicleMsg" class="message">
-                </div>
-
-            </section>
+                    <div id="vehicleMsg"></div>
 
 
-            <!-- =================================================
+                    <div class="vehicle-ai-box">
+
+                        <i class="fa-solid fa-robot"></i> Vehicle details are used by the AI parking recommendation system to suggest suitable parking slots.
+
+                    </div>
+
+
+                </section>
+
+
+                <!-- =================================================
                  REGISTERED VEHICLES
             ================================================== -->
 
-            <section class="panel">
-
-                <h3>
-                    🚗 Registered Vehicles
-                </h3>
-
-                <p class="muted">
-                    Your registered vehicles
-                </p>
+                <section class="vehicle-dashboard-panel">
 
 
-                <div id="vehicleList">
-                </div>
+                    <div class="registered-vehicles-header">
 
 
-                <div id="vehicleListMessage" class="empty">
-                    Loading vehicles...
-                </div>
+                        <div>
 
-            </section>
+                            <div class="vehicle-panel-heading">
+
+                                <h2>
+
+                                    <i class="fa-solid fa-car"></i> Registered Vehicles
+
+                                </h2>
+
+                            </div>
+
+                            <p class="vehicle-panel-subtitle">
+
+                                Your registered vehicles
+
+                            </p>
+
+                        </div>
+
+
+                        <span class="registered-count" id="vehicleCountBadge">
+
+                        0 Vehicles
+
+                    </span>
+
+
+                    </div>
+
+
+                    <!-- VEHICLE LIST -->
+
+                    <div id="vehicleList"></div>
+
+
+                    <!-- LOADING -->
+
+                    <div id="vehicleListMessage">
+
+                        Loading vehicles...
+
+                    </div>
+
+
+                </section>
+
+
+            </div>
+
 
         </div>
 
@@ -120,17 +746,104 @@
 
 
     <!-- =========================================================
-         JAVASCRIPT
-    ========================================================== -->
+     JAVASCRIPT
+========================================================== -->
 
-    <!-- config.js FIRST -->
     <script src="js/config.js"></script>
 
-    <!-- app.js SECOND -->
     <script src="js/app.js"></script>
 
-    <!-- vehicles.js THIRD -->
     <script src="js/vehicles.js"></script>
+
+
+    <!-- =========================================================
+     VEHICLE STAT UPDATE
+========================================================== -->
+
+    <script>
+        document.addEventListener(
+            "DOMContentLoaded",
+            function() {
+
+                updateVehicleStats();
+
+            }
+        );
+
+
+        async function updateVehicleStats() {
+
+            try {
+
+                const response =
+                    await fetch(API.vehicles);
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "HTTP " + response.status
+                    );
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                const vehicles =
+                    Array.isArray(data) ?
+                    data :
+                    (data.content || []);
+
+
+                const total =
+                    vehicles.length;
+
+
+                const countElement =
+                    document.getElementById(
+                        "vehicleTotalCount"
+                    );
+
+
+                const badgeElement =
+                    document.getElementById(
+                        "vehicleCountBadge"
+                    );
+
+
+                if (countElement) {
+
+                    countElement.textContent =
+                        total;
+
+                }
+
+
+                if (badgeElement) {
+
+                    badgeElement.textContent =
+                        total +
+                        (total === 1 ?
+                            " Vehicle" :
+                            " Vehicles");
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Vehicle stats error:",
+                    error
+                );
+
+            }
+
+        }
+    </script>
+
 
 </body>
 

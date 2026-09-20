@@ -2,427 +2,363 @@
    PARKING HISTORY
    ============================================================ */
 
-const HISTORY_USER_ID = 10;
-
-
-/* ============================================================
-   LOAD PARKING HISTORY
-   ============================================================ */
-
 async function loadHistory() {
 
-    const loading =
-        document.getElementById("historyLoading");
-
-    const empty =
-        document.getElementById("historyEmpty");
-
-    const list =
-        document.getElementById("historyList");
-
-    const errorBox =
-        document.getElementById("historyError");
-
-
-    /* --------------------------------------------------------
-       CHECK HTML ELEMENTS
-    -------------------------------------------------------- */
+    const loading = document.getElementById("historyLoading");
+    const empty = document.getElementById("historyEmpty");
+    const list = document.getElementById("historyList");
+    const errorBox = document.getElementById("historyError");
 
     if (!loading || !empty || !list || !errorBox) {
-
-        console.error(
-            "History page elements not found."
-        );
-
+        console.error("History HTML elements not found.");
         return;
     }
 
-
-    /* --------------------------------------------------------
-       INITIAL STATE
-    -------------------------------------------------------- */
-
     loading.style.display = "block";
-
     empty.style.display = "none";
-
     list.innerHTML = "";
-
     errorBox.style.display = "none";
-
 
     try {
 
-
         /* ====================================================
-           CHECK LOGIN
-        ==================================================== */
+           GET LOGGED-IN USER
+           ==================================================== */
 
         const userData =
-            localStorage.getItem("loggedInUser");
-
+            localStorage.getItem("loggedInUser") ||
+            localStorage.getItem("user");
 
         if (!userData) {
-
-            window.location.href =
-                "login.html";
-
+            window.location.href = "login.html";
             return;
         }
 
+        const user = JSON.parse(userData);
+        const userId = Number(user.id);
+
+        console.log("=================================");
+        console.log("PARKING HISTORY");
+        console.log("User ID:", userId);
+        console.log("=================================");
+
+        if (!userId) {
+            throw new Error("Invalid user ID.");
+        }
+
 
         /* ====================================================
-           USER ID
-           Current testing user = 10
-        ==================================================== */
+           API BASE
+           ==================================================== */
 
-        const userId =
-            HISTORY_USER_ID;
+        const apiBase =
+            window.API_BASE ||
+            "http://localhost:8081/api";
+
+        const bookingUrl =
+            `${apiBase}/parking-bookings/user/${userId}`;
+
+        console.log("Booking API:", bookingUrl);
 
 
         /* ====================================================
-           GET PARKING BOOKINGS
-        ==================================================== */
+           GET BOOKINGS
+           ==================================================== */
 
         const bookingResponse =
-            await fetch(
-                `${window.API_BASE}/parking-bookings/user/${userId}`
-            );
-
+            await fetch(bookingUrl);
 
         if (!bookingResponse.ok) {
-
             throw new Error(
-                "Unable to load parking history."
+                "Booking API error: HTTP " +
+                bookingResponse.status
             );
         }
 
-
-        let bookings =
+        const bookings =
             await bookingResponse.json();
 
-
-        /* ====================================================
-           HANDLE API RESPONSE
-        ==================================================== */
-
-        if (!Array.isArray(bookings)) {
-
-            if (
-                bookings &&
-                Array.isArray(bookings.value)
-            ) {
-
-                bookings =
-                    bookings.value;
-
-            } else {
-
-                bookings = [];
-            }
-        }
-
-
-        /* ====================================================
-           GET PARKING SLOTS
-        ==================================================== */
-
-        const slotResponse =
-            await fetch(
-                `${window.API_BASE}/parking-slots`
-            );
-
-
-        let slots = [];
-
-
-        if (slotResponse.ok) {
-
-            slots =
-                await slotResponse.json();
-
-
-            if (!Array.isArray(slots)) {
-
-                slots = [];
-            }
-        }
-
-
-        /* ====================================================
-           GET VEHICLES
-        ==================================================== */
-
-        const vehicleResponse =
-            await fetch(
-                `${window.API_BASE}/vehicles`
-            );
-
-
-        let vehicles = [];
-
-
-        if (vehicleResponse.ok) {
-
-            vehicles =
-                await vehicleResponse.json();
-
-
-            if (!Array.isArray(vehicles)) {
-
-                vehicles = [];
-            }
-        }
+        console.log(
+            "Parking Bookings:",
+            bookings
+        );
 
 
         /* ====================================================
            STOP LOADING
-        ==================================================== */
+           ==================================================== */
 
         loading.style.display = "none";
 
 
         /* ====================================================
            NO BOOKINGS
-        ==================================================== */
+           ==================================================== */
 
-        if (bookings.length === 0) {
+        if (!Array.isArray(bookings) || bookings.length === 0) {
 
             empty.style.display = "block";
+
+            console.log(
+                "No bookings found for User:",
+                userId
+            );
 
             return;
         }
 
 
         /* ====================================================
-           SORT BOOKINGS
-           NEWEST FIRST
-        ==================================================== */
+           GET SLOT DATA
+           ==================================================== */
+
+        let slots = [];
+
+        try {
+
+            const response =
+                await fetch(
+                    `${apiBase}/parking-slots`
+                );
+
+            if (response.ok) {
+                const data =
+                    await response.json();
+
+                slots =
+                    Array.isArray(data) ?
+                    data :
+                    [];
+            }
+
+        } catch (error) {
+
+            console.warn(
+                "Slot API error:",
+                error
+            );
+        }
+
+
+        /* ====================================================
+           GET VEHICLE DATA
+           ==================================================== */
+
+        let vehicles = [];
+
+        try {
+
+            const response =
+                await fetch(
+                    `${apiBase}/vehicles`
+                );
+
+            if (response.ok) {
+
+                const data =
+                    await response.json();
+
+                vehicles =
+                    Array.isArray(data) ?
+                    data :
+                    [];
+            }
+
+        } catch (error) {
+
+            console.warn(
+                "Vehicle API error:",
+                error
+            );
+        }
+
+
+        /* ====================================================
+           SORT NEWEST FIRST
+           ==================================================== */
 
         bookings.sort(function(a, b) {
 
             const dateA =
                 new Date(
-                    a.bookingDate ||
                     a.entryTime ||
-                    a.createdAt ||
+                    a.bookingDate ||
                     0
                 );
-
 
             const dateB =
                 new Date(
-                    b.bookingDate ||
                     b.entryTime ||
-                    b.createdAt ||
+                    b.bookingDate ||
                     0
                 );
-
 
             return dateB - dateA;
         });
 
 
         /* ====================================================
-           DISPLAY EACH BOOKING
-        ==================================================== */
+           DISPLAY BOOKINGS
+           ==================================================== */
 
         bookings.forEach(function(booking) {
 
-
-                    /* =================================================
+                    /* ------------------------------------------------
                        FIND SLOT
-                    ================================================= */
+                       ------------------------------------------------ */
 
                     const slot =
-                        slots.find(function(s) {
+                        slots.find(function(item) {
 
-                            return Number(s.id) ===
+                            return Number(item.id) ===
                                 Number(booking.slotId);
 
                         });
 
 
-                    /* =================================================
+                    /* ------------------------------------------------
                        FIND VEHICLE
-                    ================================================= */
+                       ------------------------------------------------ */
 
                     const vehicle =
-                        vehicles.find(function(v) {
+                        vehicles.find(function(item) {
 
-                            return Number(v.id) ===
+                            return Number(item.id) ===
                                 Number(booking.vehicleId);
 
                         });
 
 
-                    /* =================================================
-                       SLOT DETAILS
-                    ================================================= */
+                    /* ------------------------------------------------
+                       SLOT NUMBER
+                       ------------------------------------------------ */
 
-                    let slotNumber =
+                    const slotNumber =
+                        slot ?
+                        (
+                            slot.slotNumber ||
+                            slot.slotName ||
+                            `Slot #${booking.slotId}`
+                        ) :
                         `Slot #${booking.slotId}`;
 
 
-                    if (slot) {
+                    /* ------------------------------------------------
+                       VEHICLE NUMBER
+                       ------------------------------------------------ */
 
-                        if (slot.slotNumber) {
-
-                            slotNumber =
-                                slot.slotNumber;
-
-                        } else if (slot.slotName) {
-
-                            slotNumber =
-                                slot.slotName;
-                        }
-
-                    }
-
-
-                    /* =================================================
-                       VEHICLE DETAILS
-                    ================================================= */
-
-                    let vehicleNumber =
+                    const vehicleNumber =
+                        vehicle ?
+                        (
+                            vehicle.vehicleNumber ||
+                            vehicle.registrationNumber ||
+                            `Vehicle #${booking.vehicleId}`
+                        ) :
                         `Vehicle #${booking.vehicleId}`;
 
 
-                    if (vehicle) {
-
-                        if (vehicle.vehicleNumber) {
-
-                            vehicleNumber =
-                                vehicle.vehicleNumber;
-
-                        } else if (vehicle.registrationNumber) {
-
-                            vehicleNumber =
-                                vehicle.registrationNumber;
-                        }
-
-                    }
-
-
-                    /* =================================================
+                    /* ------------------------------------------------
                        VEHICLE MODEL
-                    ================================================= */
+                       ------------------------------------------------ */
 
-                    let vehicleModel = "";
-
-
-                    if (vehicle) {
-
-                        if (vehicle.model) {
-
-                            vehicleModel =
-                                vehicle.model;
-
-                        } else if (vehicle.vehicleModel) {
-
-                            vehicleModel =
-                                vehicle.vehicleModel;
-                        }
-
-                    }
+                    const vehicleModel =
+                        vehicle ?
+                        (
+                            vehicle.vehicleModel ||
+                            vehicle.model ||
+                            ""
+                        ) :
+                        "";
 
 
-                    /* =================================================
+                    /* ------------------------------------------------
+                       VEHICLE TYPE
+                       ------------------------------------------------ */
+
+                    const vehicleType =
+                        vehicle ?
+                        (
+                            vehicle.vehicleType ||
+                            vehicle.type ||
+                            ""
+                        ) :
+                        "";
+
+
+                    /* ------------------------------------------------
                        AMOUNT
-                    ================================================= */
+                       ------------------------------------------------ */
 
-                    let amount =
-                        "0.00";
-
-
-                    if (
-                        booking.amount !== null &&
-                        booking.amount !== undefined
-                    ) {
-
-                        const numericAmount =
-                            Number(booking.amount);
+                    const amount =
+                        Number(
+                            booking.amount || 0
+                        ).toFixed(2);
 
 
-                        if (!isNaN(numericAmount)) {
-
-                            amount =
-                                numericAmount.toFixed(2);
-                        }
-
-                    }
-
-
-                    /* =================================================
+                    /* ------------------------------------------------
                        DURATION
-                    ================================================= */
+                       ------------------------------------------------ */
 
-                    let duration =
+                    const duration =
+                        booking.durationHours != null ?
+                        booking.durationHours :
                         "-";
 
 
-                    if (
-                        booking.durationHours !== null &&
-                        booking.durationHours !== undefined
-                    ) {
-
-                        duration =
-                            booking.durationHours;
-
-                    } else if (
-                        booking.duration !== null &&
-                        booking.duration !== undefined
-                    ) {
-
-                        duration =
-                            booking.duration;
-                    }
-
-
-                    /* =================================================
+                    /* ------------------------------------------------
                        STATUS
-                    ================================================= */
+                       ------------------------------------------------ */
 
                     const status =
                         booking.status ||
                         "UNKNOWN";
 
 
-                    /* =================================================
+                    /* ------------------------------------------------
                        STATUS CLASS
-                    ================================================= */
+                       ------------------------------------------------ */
 
                     const statusClass =
                         getStatusClass(status);
 
 
-                    /* =================================================
-                       BOOKING DATE
-                    ================================================= */
+                    /* ------------------------------------------------
+                       DATES
+                       ------------------------------------------------ */
 
                     const bookingDate =
                         formatDate(
-                            booking.bookingDate ||
                             booking.entryTime ||
-                            booking.createdAt
+                            booking.bookingDate
                         );
+
+
+                    const entryTime =
+                        booking.entryTime ?
+                        formatDate(
+                            booking.entryTime
+                        ) :
+                        "Not available";
+
+
+                    const exitTime =
+                        booking.exitTime ?
+                        formatDate(
+                            booking.exitTime
+                        ) :
+                        "Parking Active";
 
 
                     /* =================================================
                        CREATE CARD
-                    ================================================= */
+                       ================================================= */
 
                     const card =
                         document.createElement("div");
 
-
                     card.className =
                         "history-card";
 
-
-                    /* =================================================
-                       CARD HTML
-                    ================================================= */
 
                     card.innerHTML = `
 
@@ -432,9 +368,7 @@ async function loadHistory() {
 
                         <div class="booking-id">
 
-                            🅿️ Booking #
-
-                            ${escapeHTML(
+                            🅿️ Booking #${escapeHTML(
                                 String(
                                     booking.id || "-"
                                 )
@@ -442,12 +376,9 @@ async function loadHistory() {
 
                         </div>
 
-
                         <div class="booking-date">
 
-                            📅
-
-                            ${escapeHTML(
+                            📅 ${escapeHTML(
                                 bookingDate
                             )}
 
@@ -456,9 +387,7 @@ async function loadHistory() {
                     </div>
 
 
-                    <span
-                        class="status-badge ${statusClass}"
-                    >
+                    <span class="status-badge ${statusClass}">
 
                         ${escapeHTML(
                             String(status)
@@ -472,7 +401,7 @@ async function loadHistory() {
                 <div class="history-grid">
 
 
-                    <!-- PARKING SLOT -->
+                    <!-- SLOT -->
 
                     <div class="history-info">
 
@@ -482,12 +411,9 @@ async function loadHistory() {
 
                         </span>
 
-
                         <span class="history-value">
 
-                            📍
-
-                            ${escapeHTML(
+                            📍 ${escapeHTML(
                                 String(slotNumber)
                             )}
 
@@ -506,17 +432,13 @@ async function loadHistory() {
 
                         </span>
 
-
                         <span class="history-value">
 
-                            🚗
-
-                            ${escapeHTML(
+                            🚗 ${escapeHTML(
                                 String(vehicleNumber)
                             )}
 
                         </span>
-
 
                         ${
                             vehicleModel
@@ -528,13 +450,31 @@ async function loadHistory() {
                                             color:#64748b;
                                         "
                                     >
-
                                         ${escapeHTML(
                                             String(
                                                 vehicleModel
                                             )
                                         )}
+                                    </small>
+                                  `
+                                : ""
+                        }
 
+                        ${
+                            vehicleType
+                                ? `
+                                    <small
+                                        style="
+                                            display:block;
+                                            margin-top:3px;
+                                            color:#64748b;
+                                        "
+                                    >
+                                        ${escapeHTML(
+                                            String(
+                                                vehicleType
+                                            )
+                                        )}
                                     </small>
                                   `
                                 : ""
@@ -553,16 +493,11 @@ async function loadHistory() {
 
                         </span>
 
-
                         <span class="history-value">
 
-                            ⏱️
-
-                            ${escapeHTML(
+                            ⏱️ ${escapeHTML(
                                 String(duration)
-                            )}
-
-                            hour(s)
+                            )} hour(s)
 
                         </span>
 
@@ -579,10 +514,7 @@ async function loadHistory() {
 
                         </span>
 
-
-                        <span
-                            class="history-value amount"
-                        >
+                        <span class="history-value amount">
 
                             ₹${amount}
 
@@ -591,21 +523,64 @@ async function loadHistory() {
                     </div>
 
 
+                    <!-- ENTRY -->
+
+                    <div class="history-info">
+
+                        <span class="history-label">
+
+                            Entry Time
+
+                        </span>
+
+                        <span class="history-value">
+
+                            🕐 ${escapeHTML(
+                                entryTime
+                            )}
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- EXIT -->
+
+                    <div class="history-info">
+
+                        <span class="history-label">
+
+                            Exit Time
+
+                        </span>
+
+                        <span class="history-value">
+
+                            🕐 ${escapeHTML(
+                                exitTime
+                            )}
+
+                        </span>
+
+                    </div>
+
                 </div>
 
             `;
 
-
-            /* =================================================
-               ADD CARD
-            ================================================= */
 
             list.appendChild(card);
 
         });
 
 
+        console.log(
+            "History cards displayed:",
+            bookings.length
+        );
+
     }
+
     catch (error) {
 
         console.error(
@@ -613,19 +588,14 @@ async function loadHistory() {
             error
         );
 
-
-        loading.style.display =
-            "none";
-
+        loading.style.display = "none";
+        empty.style.display = "none";
 
         errorBox.textContent =
             "❌ " + error.message;
 
-
-        errorBox.style.display =
-            "block";
+        errorBox.style.display = "block";
     }
-
 }
 
 
@@ -639,30 +609,23 @@ function getStatusClass(status) {
         String(status || "")
             .toUpperCase();
 
-
     if (value === "ACTIVE") {
-
         return "status-active";
     }
-
 
     if (
         value === "COMPLETED" ||
         value === "CONFIRMED"
     ) {
-
         return "status-completed";
     }
-
 
     if (
         value === "CANCELLED" ||
         value === "CANCELED"
     ) {
-
         return "status-cancelled";
     }
-
 
     return "status-default";
 }
@@ -675,20 +638,19 @@ function getStatusClass(status) {
 function formatDate(value) {
 
     if (!value) {
-
         return "Date not available";
     }
-
 
     const date =
         new Date(value);
 
-
-    if (isNaN(date.getTime())) {
-
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
         return String(value);
     }
-
 
     return date.toLocaleString(
         "en-IN",
@@ -727,73 +689,48 @@ function loadHistoryUser() {
     try {
 
         const userData =
-            localStorage.getItem(
-                "loggedInUser"
-            );
-
+            localStorage.getItem("loggedInUser") ||
+            localStorage.getItem("user");
 
         if (!userData) {
-
-            window.location.href =
-                "login.html";
-
+            window.location.href = "login.html";
             return;
         }
-
 
         const user =
             JSON.parse(userData);
 
-
         const name =
-            document.getElementById(
-                "userName"
-            );
-
+            document.getElementById("userName");
 
         const email =
-            document.getElementById(
-                "userEmail"
-            );
-
+            document.getElementById("userEmail");
 
         const avatar =
-            document.getElementById(
-                "userAvatar"
-            );
-
+            document.getElementById("userAvatar");
 
         if (name) {
-
             name.textContent =
                 user.name || "User";
         }
 
-
         if (email) {
-
             email.textContent =
                 user.email || "";
         }
 
-
         if (avatar) {
-
-            const firstLetter =
+            avatar.textContent =
                 (
                     user.name ||
                     "U"
                 )
                 .charAt(0)
                 .toUpperCase();
-
-
-            avatar.textContent =
-                firstLetter;
         }
 
-
     }
+
     catch (error) {
 
         console.error(
@@ -801,7 +738,6 @@ function loadHistoryUser() {
             error
         );
     }
-
 }
 
 
@@ -811,10 +747,9 @@ function loadHistoryUser() {
 
 document.addEventListener(
     "DOMContentLoaded",
-    function () {
+    function() {
 
         loadHistoryUser();
-
         loadHistory();
 
     }
