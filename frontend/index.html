@@ -213,9 +213,7 @@
 
         <div class="message" id="message"></div>
 
-        <!-- ==========================================
-             EMAIL LOGIN FORM
-        =========================================== -->
+        <!-- EMAIL LOGIN / SIGNUP -->
 
         <form id="authForm">
 
@@ -245,19 +243,13 @@
 
         </form>
 
-
-        <!-- ==========================================
-             DIVIDER
-        =========================================== -->
+        <!-- DIVIDER -->
 
         <div class="divider">
             or
         </div>
 
-
-        <!-- ==========================================
-             GOOGLE LOGIN
-        =========================================== -->
+        <!-- GOOGLE LOGIN -->
 
         <button type="button" class="btn-google" id="googleBtn">
 
@@ -294,10 +286,7 @@
 
         </button>
 
-
-        <!-- ==========================================
-             SIGN UP TOGGLE
-        =========================================== -->
+        <!-- SIGN UP TOGGLE -->
 
         <p class="toggle-text">
 
@@ -314,9 +303,9 @@
     </div>
 
 
-    <!-- ==========================================
+    <!-- =========================================
          FIREBASE SDK
-    =========================================== -->
+    ========================================== -->
 
     <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 
@@ -343,6 +332,7 @@
             appId: "1:565031477506:web:71197287838c5ce8e7221b",
 
             measurementId: "G-TWGTWRKY56"
+
         };
 
 
@@ -401,12 +391,10 @@
 
         function openDashboard() {
 
-            console.log(
-                "Opening dashboard.html..."
-            );
+            console.log("Opening dashboard.html...");
 
-            window.location.href =
-                "dashboard.html";
+            window.location.href = "dashboard.html";
+
         }
 
 
@@ -416,11 +404,11 @@
 
         function showMessage(text, type) {
 
-            messageEl.textContent =
-                text;
+            messageEl.textContent = text;
 
             messageEl.className =
                 "message " + type;
+
         }
 
 
@@ -430,11 +418,10 @@
 
         function clearMessage() {
 
-            messageEl.textContent =
-                "";
+            messageEl.textContent = "";
 
-            messageEl.className =
-                "message";
+            messageEl.className = "message";
+
         }
 
 
@@ -444,8 +431,7 @@
 
         function setLoading(loading) {
 
-            submitBtn.disabled =
-                loading;
+            submitBtn.disabled = loading;
 
             if (loading) {
 
@@ -458,7 +444,9 @@
                     isSignUp ?
                     "Sign Up" :
                     "Sign In";
+
             }
+
         }
 
 
@@ -508,6 +496,7 @@
 
                     toggleLink.textContent =
                         "Sign up";
+
                 }
 
             }
@@ -563,7 +552,6 @@
                         );
 
 
-                        // Wait shortly, then dashboard
                         setTimeout(
                             function() {
 
@@ -573,8 +561,8 @@
                             800
                         );
 
-
                     }
+
 
                     // =================================================
                     // EMAIL SIGN IN
@@ -600,11 +588,6 @@
                         );
 
 
-                        // =================================================
-                        // EMAIL LOGIN SUCCESS
-                        // OPEN DASHBOARD
-                        // =================================================
-
                         setTimeout(
                             function() {
 
@@ -626,12 +609,8 @@
 
 
                     let message =
-                        error.message;
+                        "Authentication failed.";
 
-
-                    // =================================================
-                    // FIREBASE ERROR HANDLING
-                    // =================================================
 
                     if (
                         error.code ===
@@ -688,6 +667,21 @@
 
                         message =
                             "Too many attempts. Please try again later.";
+
+                    } else if (
+                        error.code ===
+                        "auth/operation-not-allowed"
+                    ) {
+
+                        message =
+                            "Email/Password login is not enabled in Firebase.";
+
+                    } else {
+
+                        message =
+                            error.message ||
+                            "Authentication failed.";
+
                     }
 
 
@@ -695,7 +689,6 @@
                         message,
                         "error"
                     );
-
 
                 } finally {
 
@@ -718,8 +711,7 @@
                 clearMessage();
 
 
-                googleBtn.disabled =
-                    true;
+                googleBtn.disabled = true;
 
                 googleBtnText.textContent =
                     "Connecting to Google...";
@@ -727,23 +719,19 @@
 
                 try {
 
-                    // =================================================
-                    // CREATE GOOGLE PROVIDER
-                    // =================================================
+                    // Create Google provider
 
                     const provider =
                         new firebase.auth.GoogleAuthProvider();
 
 
                     provider.setCustomParameters({
-
                         prompt: "select_account"
-
                     });
 
 
                     // =================================================
-                    // GOOGLE POPUP LOGIN
+                    // GOOGLE POPUP
                     // =================================================
 
                     const result =
@@ -757,7 +745,7 @@
 
 
                     // =================================================
-                    // USER INFORMATION
+                    // USER DETAILS
                     // =================================================
 
                     console.log(
@@ -794,7 +782,29 @@
 
 
                     // =================================================
-                    // SUCCESS MESSAGE
+                    // SAVE USER LOCALLY
+                    // =================================================
+
+                    localStorage.setItem(
+                        "firebaseUser",
+                        JSON.stringify({
+
+                            uid: user.uid,
+
+                            name: user.displayName,
+
+                            email: user.email,
+
+                            photo: user.photoURL,
+
+                            provider: "Google"
+
+                        })
+                    );
+
+
+                    // =================================================
+                    // SUCCESS
                     // =================================================
 
                     showMessage(
@@ -808,8 +818,7 @@
 
 
                     // =================================================
-                    // GOOGLE LOGIN SUCCESS
-                    // OPEN DASHBOARD
+                    // REDIRECT DASHBOARD
                     // =================================================
 
                     setTimeout(
@@ -829,14 +838,15 @@
                         error
                     );
 
+                    console.error(
+                        "Error Code:",
+                        error.code
+                    );
+
 
                     let message =
-                        error.message;
+                        "Google Sign-In failed.";
 
-
-                    // =================================================
-                    // GOOGLE ERROR HANDLING
-                    // =================================================
 
                     if (
                         error.code ===
@@ -852,7 +862,7 @@
                     ) {
 
                         message =
-                            "Popup was blocked. Please allow popups for this site.";
+                            "Popup was blocked. Please allow popups for this website.";
 
                     } else if (
                         error.code ===
@@ -860,7 +870,15 @@
                     ) {
 
                         message =
-                            "This website domain is not authorized in Firebase.";
+                            "This website domain is not authorized. Please open this page using http://localhost:5500 and add localhost in Firebase Authentication → Settings → Authorized domains.";
+
+                    } else if (
+                        error.code ===
+                        "auth/operation-not-allowed"
+                    ) {
+
+                        message =
+                            "Google Sign-In is not enabled in Firebase. Enable Google under Authentication → Sign-in method.";
 
                     } else if (
                         error.code ===
@@ -868,7 +886,7 @@
                     ) {
 
                         message =
-                            "An account already exists with this email using another login method.";
+                            "An account already exists with this email using another sign-in method.";
 
                     } else if (
                         error.code ===
@@ -878,6 +896,12 @@
                         message =
                             "Network error. Please check your internet connection.";
 
+                    } else {
+
+                        message =
+                            error.message ||
+                            "Google Sign-In failed.";
+
                     }
 
 
@@ -886,10 +910,10 @@
                         "error"
                     );
 
+
                 } finally {
 
-                    googleBtn.disabled =
-                        false;
+                    googleBtn.disabled = false;
 
                     googleBtnText.textContent =
                         "Continue with Google";
@@ -914,18 +938,24 @@
                     );
 
                     console.log(
+                        "Name:",
+                        user.displayName
+                    );
+
+                    console.log(
                         "Email:",
                         user.email
                     );
 
                     console.log(
-                        "Display Name:",
-                        user.displayName
-                    );
-
-                    console.log(
                         "UID:",
                         user.uid
+                    );
+
+                } else {
+
+                    console.log(
+                        "No user currently logged in."
                     );
 
                 }

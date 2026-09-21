@@ -1,7 +1,7 @@
 # Smart Car Parking Frontend
 
 ## Folder structure
-- index.html / login.html / register.html
+- index.html
 - dashboard.html
 - parking-slots.html
 - vehicles.html

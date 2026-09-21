@@ -122,8 +122,7 @@
             try {
 
                 data = text ?
-                    JSON.parse(text) :
-                    [];
+                    JSON.parse(text) : [];
 
             } catch (jsonError) {
 
@@ -1126,7 +1125,7 @@
             );
 
             window.location.href =
-                "login.html";
+                "dashboard.html";
 
         };
 

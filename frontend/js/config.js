@@ -75,6 +75,134 @@ const APP_CONFIG = {
 
 
 // ============================================================
+// SHARED USER / SESSION HELPERS
+// ============================================================
+
+const SmartParking = (() => {
+
+    const STORAGE_KEYS = [
+        "loggedInUser",
+        "user",
+        "scp_user",
+        "firebaseUser"
+    ];
+
+    const DEMO_USER = {
+        id: 10,
+        name: "Test User",
+        email: "test@example.com",
+        role: "USER"
+    };
+
+    function normalizeUser(user, fallback = null) {
+
+        if (!user || typeof user !== "object") {
+            return fallback ? { ...fallback } : null;
+        }
+
+        const normalized = {
+            id: user.id !== undefined && user.id !== null ?
+                Number(user.id) :
+                (
+                    user.userId !== undefined && user.userId !== null ?
+                    Number(user.userId) :
+                    null
+                ),
+
+            name: user.name || user.displayName || "User",
+            email: user.email || "",
+            role: (user.role || "USER").toUpperCase()
+        };
+
+        return normalized;
+    }
+
+    function getCurrentUser() {
+
+        if (typeof localStorage === "undefined") {
+            return null;
+        }
+
+        for (const key of STORAGE_KEYS) {
+            const value = localStorage.getItem(key);
+
+            if (!value) {
+                continue;
+            }
+
+            try {
+                const parsed = JSON.parse(value);
+                const normalized = normalizeUser(parsed, null);
+
+                if (normalized) {
+                    return normalized;
+                }
+            } catch (error) {
+                console.warn(`Unable to parse saved user for ${key}:`, error);
+                localStorage.removeItem(key);
+            }
+        }
+
+        return null;
+    }
+
+    function getUserSafe() {
+        return getCurrentUser() || { ...DEMO_USER };
+    }
+
+    function saveUser(user) {
+
+        const normalizedUser = normalizeUser(user, DEMO_USER);
+
+        if (typeof localStorage === "undefined") {
+            return normalizedUser;
+        }
+
+        const sessionValues = {
+            loggedInUser: normalizedUser,
+            user: normalizedUser,
+            scp_user: normalizedUser
+        };
+
+        Object.entries(sessionValues).forEach(([key, value]) => {
+            localStorage.setItem(key, JSON.stringify(value));
+        });
+
+        return normalizedUser;
+    }
+
+    function clearUserSession() {
+
+        if (typeof localStorage === "undefined") {
+            return;
+        }
+
+        STORAGE_KEYS.forEach((key) => {
+            localStorage.removeItem(key);
+        });
+    }
+
+    function getDashboardRedirect(role) {
+        return (role || "USER").toUpperCase() === "ADMIN" ?
+            "admin-dashboard.html" :
+            "dashboard.html";
+    }
+
+    return {
+        STORAGE_KEYS,
+        DEMO_USER,
+        normalizeUser,
+        getCurrentUser,
+        getUserSafe,
+        saveUser,
+        clearUserSession,
+        getDashboardRedirect
+    };
+
+})();
+
+
+// ============================================================
 // API HELPER FUNCTION
 // ============================================================
 
@@ -160,15 +288,20 @@ async function apiRequest(url, options = {}) {
 // EXPORT GLOBAL CONFIGURATION
 // ============================================================
 
-window.API_BASE = API_BASE;
+if (typeof window !== "undefined") {
+    window.API_BASE = API_BASE;
+    window.GOOGLE_MAPS_API_KEY = GOOGLE_MAPS_API_KEY;
+    window.API = API;
+    window.APP_CONFIG = APP_CONFIG;
+    window.SmartParking = SmartParking;
+    window.apiRequest = apiRequest;
+}
 
-window.GOOGLE_MAPS_API_KEY = GOOGLE_MAPS_API_KEY;
-
-window.API = API;
-
-window.APP_CONFIG = APP_CONFIG;
-
-window.apiRequest = apiRequest;
+if (typeof module !== "undefined" && module.exports) {
+    module.exports = {
+        SmartParking
+    };
+}
 
 
 // ============================================================

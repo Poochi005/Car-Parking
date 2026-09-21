@@ -3,6 +3,10 @@
    ============================================================ */
 
 function getUserSafe() {
+    if (window.SmartParking && typeof window.SmartParking.getUserSafe === "function") {
+        return window.SmartParking.getUserSafe();
+    }
+
     try {
         const user =
             JSON.parse(localStorage.getItem("loggedInUser") || "null") ||
@@ -36,11 +40,15 @@ const user = getUserSafe();
 
 function logout() {
 
-    localStorage.removeItem("loggedInUser");
-    localStorage.removeItem("user");
-    localStorage.removeItem("scp_user");
+    if (window.SmartParking && typeof window.SmartParking.clearUserSession === "function") {
+        window.SmartParking.clearUserSession();
+    } else {
+        localStorage.removeItem("loggedInUser");
+        localStorage.removeItem("user");
+        localStorage.removeItem("scp_user");
+    }
 
-    window.location.href = "login.html";
+    window.location.href = "dashboard.html";
 }
 
 

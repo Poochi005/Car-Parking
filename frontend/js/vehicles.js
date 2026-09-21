@@ -47,30 +47,76 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /* =========================================================
        GET LOGGED-IN USER
+       Supports:
+       1. loggedInUser
+       2. firebaseUser
+       3. user
     ========================================================= */
 
     function getCurrentUser() {
 
-        const savedUser =
-            localStorage.getItem("loggedInUser");
+        const keys = [
+            "loggedInUser",
+            "firebaseUser",
+            "user"
+        ];
 
-        if (!savedUser) {
-            return null;
+        for (const key of keys) {
+
+            const savedUser =
+                localStorage.getItem(key);
+
+            if (!savedUser) {
+                continue;
+            }
+
+            try {
+
+                const user =
+                    JSON.parse(savedUser);
+
+                if (user) {
+
+                    console.log(
+                        "Current user found from:",
+                        key,
+                        user
+                    );
+
+                    /*
+                     * Firebase user may not have id.
+                     * Use uid as fallback.
+                     */
+                    if (!user.id &&
+                        user.uid
+                    ) {
+                        user.id = user.uid;
+                    }
+
+                    /*
+                     * Name fallback
+                     */
+                    if (!user.name &&
+                        user.displayName
+                    ) {
+                        user.name =
+                            user.displayName;
+                    }
+
+                    return user;
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Invalid user data in:",
+                    key,
+                    error
+                );
+            }
         }
 
-        try {
-
-            return JSON.parse(savedUser);
-
-        } catch (error) {
-
-            console.error(
-                "Invalid logged-in user:",
-                error
-            );
-
-            return null;
-        }
+        return null;
     }
 
 
@@ -84,8 +130,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (!currentUser) {
 
+        console.warn(
+            "No logged-in user found. Redirecting to login."
+        );
+
         window.location.href =
-            "login.html";
+            "index.html";
 
         return;
     }
@@ -94,6 +144,22 @@ document.addEventListener("DOMContentLoaded", function() {
     console.log(
         "Current logged-in user:",
         currentUser
+    );
+
+
+    /* =========================================================
+       GET USER ID
+    ========================================================= */
+
+    const currentUserId =
+        currentUser.id ||
+        currentUser.userId ||
+        currentUser.uid;
+
+
+    console.log(
+        "Current user ID:",
+        currentUserId
     );
 
 
@@ -114,7 +180,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (window.API_BASE) {
 
-            return window.API_BASE + "/vehicles";
+            return window.API_BASE +
+                "/vehicles";
 
         }
 
@@ -224,7 +291,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 vehicles =
                     result.data;
-
             }
 
 
@@ -241,20 +307,42 @@ document.addEventListener("DOMContentLoaded", function() {
             const myVehicles =
                 vehicles.filter(function(vehicle) {
 
-                    return Number(
-                        vehicle.userId
-                    ) === Number(
-                        currentUser.id
+                    let vehicleUserId = null;
+
+                    if (vehicle.userId) {
+
+                        vehicleUserId =
+                            vehicle.userId;
+
+                    } else if (
+                        vehicle.user &&
+                        vehicle.user.id
+                    ) {
+
+                        vehicleUserId =
+                            vehicle.user.id;
+
+                    } else if (
+                        vehicle.user &&
+                        vehicle.user.userId
+                    ) {
+
+                        vehicleUserId =
+                            vehicle.user.userId;
+                    }
+
+                    return String(
+                        vehicleUserId
+                    ) === String(
+                        currentUserId
                     );
 
                 });
-
 
             console.log(
                 "My vehicles:",
                 myVehicles
             );
-
 
             /* =================================================
                UPDATE COUNT
@@ -314,7 +402,6 @@ document.addEventListener("DOMContentLoaded", function() {
                         </div>
 
                     `;
-
                 }
 
                 return;
@@ -390,7 +477,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     </div>
 
                 `;
-
             }
 
         }
@@ -472,7 +558,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
             vehicleIcon =
                 "fa-bolt";
-
         }
 
 
@@ -659,9 +744,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 const data = {
 
-                    userId: Number(
-                        currentUser.id
-                    ),
+                    userId: currentUserId,
 
                     vehicleNumber: vehicleNumber.value
                         .trim()

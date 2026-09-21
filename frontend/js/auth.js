@@ -2,8 +2,9 @@
    AUTHENTICATION HELPER
    ============================================================ */
 
+
 /* ============================================================
-   LOGIN
+   LOGIN - BACKEND LOGIN
    ============================================================ */
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -67,7 +68,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
             const data = await response.json();
 
-            console.log("Login response:", data);
+            console.log(
+                "Login response:",
+                data
+            );
 
             if (!response.ok) {
 
@@ -92,68 +96,66 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
-            /*
-             * IMPORTANT
-             * Support both:
-             * id
-             * userId
-             */
-
-            const normalizedUser = {
-
-                id: user.id !== undefined &&
-                    user.id !== null ?
-                    Number(user.id) :
-                    Number(user.userId),
-
-                name: user.name || "User",
-
-                email: user.email || "",
-
-                role: user.role || "USER"
-
-            };
+            const normalizedUser = window.SmartParking ?
+                window.SmartParking.normalizeUser(user, null) :
+                {
+                    id: user.id !== undefined && user.id !== null ?
+                        Number(user.id) :
+                        (
+                            user.userId !== undefined && user.userId !== null ?
+                            Number(user.userId) :
+                            null
+                        ),
+                    name: user.name || "User",
+                    email: user.email || "",
+                    role: (user.role || "USER").toUpperCase()
+                };
 
             console.log(
                 "Normalized logged-in user:",
                 normalizedUser
             );
 
-            /* Save user */
+            if (window.SmartParking && typeof window.SmartParking.saveUser === "function") {
+                window.SmartParking.saveUser(normalizedUser);
+            } else {
+                localStorage.setItem(
+                    "loggedInUser",
+                    JSON.stringify(normalizedUser)
+                );
 
-            localStorage.setItem(
-                "loggedInUser",
-                JSON.stringify(normalizedUser)
-            );
+                localStorage.setItem(
+                    "user",
+                    JSON.stringify(normalizedUser)
+                );
+            }
 
-            localStorage.setItem(
-                "user",
-                JSON.stringify(normalizedUser)
-            );
+
+            /* ====================================================
+               SUCCESS
+               ==================================================== */
 
             showLoginMessage(
                 "Login successful! Redirecting...",
                 true
             );
 
+
             setTimeout(function() {
 
-                if (
-                    normalizedUser.role &&
-                    normalizedUser.role.toUpperCase() === "ADMIN"
-                ) {
+                const redirectPage = window.SmartParking && typeof window.SmartParking.getDashboardRedirect === "function" ?
+                    window.SmartParking.getDashboardRedirect(normalizedUser.role) :
+                    (
+                        normalizedUser.role &&
+                        normalizedUser.role.toUpperCase() === "ADMIN" ?
+                        "admin-dashboard.html" :
+                        "dashboard.html"
+                    );
 
-                    window.location.href =
-                        "admin-dashboard.html";
-
-                } else {
-
-                    window.location.href =
-                        "dashboard.html";
-
-                }
+                window.location.href = redirectPage;
 
             }, 800);
+
 
         } catch (error) {
 
@@ -166,7 +168,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 "Unable to connect to server. Make sure Spring Boot is running on port 8081.",
                 false
             );
+
         }
+
     });
 
 
@@ -178,7 +182,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (loginMessage) {
 
-            loginMessage.textContent = text;
+            loginMessage.textContent =
+                text;
 
             loginMessage.style.color =
                 success ?
@@ -190,6 +195,7 @@ document.addEventListener("DOMContentLoaded", function() {
             alert(text);
 
         }
+
     }
 
 });
@@ -201,70 +207,43 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function getUser() {
 
-    const userData =
-        localStorage.getItem("loggedInUser");
+    const currentUser = window.SmartParking && typeof window.SmartParking.getCurrentUser === "function" ?
+        window.SmartParking.getCurrentUser() :
+        (() => {
+            let userData = localStorage.getItem("loggedInUser");
 
-    if (!userData) {
-
-        return null;
-    }
-
-    try {
-
-        const user =
-            JSON.parse(userData);
-
-        /*
-         * Make sure user ID is always available
-         * as currentUser.id
-         */
-
-        if (
-            user.id === undefined ||
-            user.id === null
-        ) {
-
-            if (
-                user.userId !== undefined &&
-                user.userId !== null
-            ) {
-
-                user.id =
-                    Number(user.userId);
-
+            if (!userData) {
+                userData = localStorage.getItem("firebaseUser");
             }
 
-        } else {
+            if (!userData) {
+                userData = localStorage.getItem("user");
+            }
 
-            user.id =
-                Number(user.id);
+            if (!userData) {
+                console.log("No logged-in user found.");
+                return null;
+            }
 
-        }
+            try {
+                const user = JSON.parse(userData);
+                return {
+                    id: user.id !== undefined && user.id !== null ? Number(user.id) : null,
+                    name: user.name || user.displayName || "User",
+                    email: user.email || "",
+                    role: (user.role || "USER").toUpperCase()
+                };
+            } catch (error) {
+                console.error("Invalid user data:", error);
+                localStorage.removeItem("loggedInUser");
+                localStorage.removeItem("user");
+                localStorage.removeItem("firebaseUser");
+                return null;
+            }
+        })();
 
-        console.log(
-            "Current logged-in user:",
-            user
-        );
-
-        return user;
-
-    } catch (error) {
-
-        console.error(
-            "Invalid user data:",
-            error
-        );
-
-        localStorage.removeItem(
-            "loggedInUser"
-        );
-
-        localStorage.removeItem(
-            "user"
-        );
-
-        return null;
-    }
+    console.log("Current logged-in user:", currentUser);
+    return currentUser;
 }
 
 
@@ -274,16 +253,21 @@ function getUser() {
 
 function logout() {
 
-    localStorage.removeItem(
-        "loggedInUser"
-    );
+    if (window.SmartParking && typeof window.SmartParking.clearUserSession === "function") {
+        window.SmartParking.clearUserSession();
+    } else {
+        localStorage.removeItem("loggedInUser");
+        localStorage.removeItem("user");
+        localStorage.removeItem("firebaseUser");
+    }
 
-    localStorage.removeItem(
-        "user"
-    );
+    /*
+     * Login page is index.html
+     */
 
     window.location.href =
-        "login.html";
+        "index.html";
+
 }
 
 
@@ -302,20 +286,26 @@ function loginAsAdmin() {
         email: "admin@example.com",
 
         role: "ADMIN"
+
     };
 
-    localStorage.setItem(
-        "loggedInUser",
-        JSON.stringify(adminUser)
-    );
+    if (window.SmartParking && typeof window.SmartParking.saveUser === "function") {
+        window.SmartParking.saveUser(adminUser);
+    } else {
+        localStorage.setItem(
+            "loggedInUser",
+            JSON.stringify(adminUser)
+        );
 
-    localStorage.setItem(
-        "user",
-        JSON.stringify(adminUser)
-    );
+        localStorage.setItem(
+            "user",
+            JSON.stringify(adminUser)
+        );
+    }
 
     window.location.href =
         "admin-dashboard.html";
+
 }
 
 
@@ -328,15 +318,18 @@ function requireLogin() {
     const user =
         getUser();
 
+
     if (!user) {
 
         window.location.href =
-            "login.html";
+            "index.html";
 
         return null;
     }
 
+
     return user;
+
 }
 
 
@@ -349,13 +342,15 @@ function requireAdmin() {
     const user =
         getUser();
 
+
     if (!user) {
 
         window.location.href =
-            "login.html";
+            "index.html";
 
         return null;
     }
+
 
     if (!user.role ||
         user.role.toUpperCase() !== "ADMIN"
@@ -367,5 +362,7 @@ function requireAdmin() {
         return null;
     }
 
+
     return user;
+
 }

@@ -30,7 +30,7 @@ async function loadHistory() {
             localStorage.getItem("user");
 
         if (!userData) {
-            window.location.href = "login.html";
+            window.location.href = "history.html";
             return;
         }
 
@@ -127,8 +127,7 @@ async function loadHistory() {
 
                 slots =
                     Array.isArray(data) ?
-                    data :
-                    [];
+                    data : [];
             }
 
         } catch (error) {
@@ -160,8 +159,7 @@ async function loadHistory() {
 
                 vehicles =
                     Array.isArray(data) ?
-                    data :
-                    [];
+                    data : [];
             }
 
         } catch (error) {
@@ -693,7 +691,7 @@ function loadHistoryUser() {
             localStorage.getItem("user");
 
         if (!userData) {
-            window.location.href = "login.html";
+            window.location.href = "history.html";
             return;
         }
 
