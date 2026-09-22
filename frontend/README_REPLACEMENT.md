@@ -25,4 +25,4 @@ This package updates the frontend to use the same clean Smart Parking design sho
 6. Open `parking-slots.html` or `dashboard.html`.
 
 ## Backend is NOT changed
-The frontend still expects the Spring Boot API at `http://localhost:8081/api`.
+The frontend still expects the Spring Boot API at `https://car-parking-production-5662.up.railway.app`.

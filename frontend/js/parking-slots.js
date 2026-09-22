@@ -1,4 +1,4 @@
-const PARKING_API_BASE = "http://localhost:8081/api";
+const PARKING_API_BASE = "https://car-parking-production-5662.up.railway.app/api";
 
 let parkingSlots = [];
 let selectedSlot = null;

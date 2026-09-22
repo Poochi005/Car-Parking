@@ -53,7 +53,7 @@ async function loadHistory() {
 
         const apiBase =
             window.API_BASE ||
-            "http://localhost:8081/api";
+            "https://car-parking-production-5662.up.railway.app/api";
 
         const bookingUrl =
             `${apiBase}/parking-bookings/user/${userId}`;

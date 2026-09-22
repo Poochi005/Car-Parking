@@ -3,7 +3,7 @@
    REAL-TIME VERSION
 ===================================================== */
 
-const API_BASE_URL = "http://localhost:8081";
+const API_BASE_URL = "https://car-parking-production-5662.up.railway.app";
 
 let allSlots = [];
 let allBookings = [];

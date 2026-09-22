@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         }
 
-        return "http://localhost:8081/api/vehicles";
+        return "https://car-parking-production-5662.up.railway.app/api/vehicles";
     }
 
 

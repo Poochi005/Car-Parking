@@ -6,7 +6,7 @@
 // SPRING BOOT BACKEND
 // ============================================================
 
-const API_BASE = "http://localhost:8081/api";
+const API_BASE = "https://car-parking-production-5662.up.railway.app/api";
 
 
 // ============================================================
@@ -63,7 +63,7 @@ const APP_CONFIG = {
 
     appName: "Smart Car Parking",
 
-    backendUrl: "http://localhost:8081",
+    backendUrl: "https://car-parking-production-5662.up.railway.app",
 
     frontendUrl: "http://127.0.0.1:5500/frontend",
 
@@ -97,7 +97,7 @@ const SmartParking = (() => {
     function normalizeUser(user, fallback = null) {
 
         if (!user || typeof user !== "object") {
-            return fallback ? { ...fallback } : null;
+            return fallback ? {...fallback } : null;
         }
 
         const normalized = {
@@ -147,7 +147,7 @@ const SmartParking = (() => {
     }
 
     function getUserSafe() {
-        return getCurrentUser() || { ...DEMO_USER };
+        return getCurrentUser() || {...DEMO_USER };
     }
 
     function saveUser(user) {

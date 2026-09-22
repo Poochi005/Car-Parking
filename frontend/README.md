@@ -29,7 +29,7 @@
 Use VS Code Live Server and open `index.html`.
 
 Spring Boot expected at:
-http://localhost:8081
+https://car-parking-production-5662.up.railway.app
 
 Current connected endpoints:
 - GET /api/parking-slots
